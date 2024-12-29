@@ -22,7 +22,7 @@ class DetailPeriksa extends Model
 
     public function obat()
     {
-        return $this->belongsTo(Obat::class, 'id_obat', 'id');
+        return $this->belongsToMany(Obat::class, 'detail_periksa', 'id_periksa', 'id_obat');
     }
 
 }

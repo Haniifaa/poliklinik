@@ -28,18 +28,6 @@
                     />
                 </svg>
             </div>
-
-            <!-- Tombol Tambah Jadwal -->
-            <button
-class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 flex items-center space-x-2"
-type="button"
->
-<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-4 h-4">
-    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-</svg>
-<span>Tambah Jadwal</span>
-</button>
-
         </div>
 
         <!-- Tabel -->
@@ -57,65 +45,110 @@ type="button"
                     </tr>
                 </thead>
                 <tbody>
+                    @forelse($riwayat as $r)
                     <tr class="bg-white border-b hover:bg-gray-50">
-                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                            Apple MacBook Pro 17"
-                        </th>
-                        <td class="px-6 py-4">Silver</td>
-                        <td class="px-6 py-4">Laptop</td>
-                        <td class="px-6 py-4">Yes</td>
-                        <td class="px-6 py-4">Yes</td>
-                        <td class="px-6 py-4">$2999</td>
+                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">{{ $loop->iteration }}</th>
+                        <td class="px-6 py-4">{{ $r->daftarPoli->pasien->nama }}</td>
+                        <td class="px-6 py-4">{{ $r->daftarPoli->pasien->alamat }}</td>
+                        <td class="px-6 py-4">{{ $r->daftarPoli->pasien->no_ktp }}</td>
+                        <td class="px-6 py-4">{{ $r->daftarPoli->pasien->no_hp }}</td>
+                        <td class="px-6 py-4">{{ $r->daftarPoli->pasien->no_rm }}</td>
                         <td class="flex items-center px-6 py-4">
-                            <a href="#" class="font-medium text-blue-600 hover:underline">Edit</a>
-                            <a href="#" class="font-medium text-red-600 hover:underline ml-3">Remove</a>
+                            <button onclick="showModal({{ $r->id }})" class="font-medium text-blue-600 hover:underline" aria-label="Detail Riwayat Periksa">Detail Riwayat Periksa</button>
                         </td>
                     </tr>
-                    <tr class="bg-white border-b hover:bg-gray-50">
-                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                            Dell XPS 13
-                        </th>
-                        <td class="px-6 py-4">Black</td>
-                        <td class="px-6 py-4">Laptop</td>
-                        <td class="px-6 py-4">No</td>
-                        <td class="px-6 py-4">Yes</td>
-                        <td class="px-6 py-4">$1599</td>
-                        <td class="flex items-center px-6 py-4">
-                            <a href="#" class="font-medium text-blue-600 hover:underline">Edit</a>
-                            <a href="#" class="font-medium text-red-600 hover:underline ml-3">Remove</a>
-                        </td>
+                    @empty
+                    <tr>
+                        <td colspan="5" class="text-center py-4">Tidak ada data pasien.</td>
                     </tr>
-                    <tr class="bg-white border-b hover:bg-gray-50">
-                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                            HP Spectre x360
-                        </th>
-                        <td class="px-6 py-4">Grey</td>
-                        <td class="px-6 py-4">Laptop</td>
-                        <td class="px-6 py-4">Yes</td>
-                        <td class="px-6 py-4">Yes</td>
-                        <td class="px-6 py-4">$1799</td>
-                        <td class="flex items-center px-6 py-4">
-                            <a href="#" class="font-medium text-blue-600 hover:underline">Edit</a>
-                            <a href="#" class="font-medium text-red-600 hover:underline ml-3">Remove</a>
-                        </td>
-                    </tr>
-                    <tr class="bg-white border-b hover:bg-gray-50">
-                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                            Lenovo ThinkPad X1
-                        </th>
-                        <td class="px-6 py-4">Black</td>
-                        <td class="px-6 py-4">Laptop</td>
-                        <td class="px-6 py-4">Yes</td>
-                        <td class="px-6 py-4">No</td>
-                        <td class="px-6 py-4">$1399</td>
-                        <td class="flex items-center px-6 py-4">
-                            <a href="#" class="font-medium text-blue-600 hover:underline">Edit</a>
-                            <a href="#" class="font-medium text-red-600 hover:underline ml-3">Remove</a>
-                        </td>
-                    </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>
     </div>
-</x-layout-dokter>
 
+    <!-- Modal Detail Riwayat -->
+    <div id="detailModal" class="fixed inset-0 z-50 hidden bg-gray-500 bg-opacity-50 flex items-center justify-center">
+        <div class="bg-white p-6 rounded-lg shadow-lg max-w-4xl w-full">
+            <h2 class="text-xl font-bold text-gray-800 mb-4">Detail Riwayat Periksa</h2>
+            <table class="min-w-full text-sm text-left text-gray-500">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                    <tr>
+                        <th scope="col" class="px-6 py-3">No</th>
+                        <th scope="col" class="px-6 py-3">Tanggal Periksa</th>
+                        <th scope="col" class="px-6 py-3">Nama Pasien</th>
+                        <th scope="col" class="px-6 py-3">Nama Dokter</th>
+                        <th scope="col" class="px-6 py-3">Keluhan</th>
+                        <th scope="col" class="px-6 py-3">Catatan</th>
+                        <th scope="col" class="px-6 py-3">Obat</th>
+                        <th scope="col" class="px-6 py-3">Biaya Periksa</th>
+                    </tr>
+                </thead>
+                <tbody id="modal-detail-body">
+                    <!-- Isi modal akan dimuat dengan JavaScript -->
+                </tbody>
+            </table>
+            <div class="mt-4 flex justify-end">
+                <button onclick="closeModal()" class="bg-purple-500 text-white py-2 px-4 rounded">Tutup</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Fungsi untuk menampilkan modal dengan data yang sesuai
+        function showModal(id) {
+    const modal = document.getElementById('detailModal');
+    const rows = document.querySelectorAll('#detailModal tbody tr');
+
+    // Sembunyikan semua baris
+    rows.forEach((row) => {
+        row.classList.add('hidden');
+    });
+
+    // Ambil data riwayat yang sesuai
+    const matchingRiwayat = @json($riwayat); // Menyertakan data riwayat pasien dari PHP ke JavaScript
+    console.log("Data Riwayat:", matchingRiwayat); // Debugging: cek data riwayat
+    console.log("ID yang dikirim:", id); // Debugging: cek ID yang dikirim
+
+    // Cek ID dan data riwayat
+    const riwayat = matchingRiwayat.find(r => parseInt(r.id) === parseInt(id)); // Memastikan tipe data sama (integer)
+
+    // Debugging: cek apakah data riwayat ditemukan
+    if (riwayat) {
+        console.log("Data Riwayat yang Ditemukan:", riwayat); // Log data yang ditemukan
+        const modalBody = document.getElementById('modal-detail-body');
+
+        // Menggunakan optional chaining (?.) untuk menghindari error jika data tidak ada
+        modalBody.innerHTML = `
+            <tr>
+                <td class="px-6 py-4">${id}</td>
+                <td class="px-6 py-4">${riwayat.tgl_periksa || 'Tanggal tidak tersedia'}</td>
+                <td class="px-6 py-4">${riwayat.daftarPoli?.pasien?.nama || 'Nama Pasien Tidak Ditemukan'}</td>
+                <td class="px-6 py-4">${riwayat.daftarPoli?.dokter?.nama || 'Tidak ada dokter'}</td>
+                <td class="px-6 py-4">${riwayat.daftarPoli?.keluhan || 'Tidak ada keluhan'}</td>
+                <td class="px-6 py-4">${riwayat.catatan || 'Tidak ada catatan'}</td>
+                <td class="px-6 py-4">
+                    ${riwayat.detailPeriksa?.length ? riwayat.detailPeriksa.map(d => d.obat?.nama_obat).join('<br>') : 'Tidak ada obat'}
+                </td>
+                <td class="px-6 py-4">Rp ${riwayat.biaya_periksa?.toLocaleString() || '0'}</td>
+            </tr>
+        `;
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+    } else {
+        console.error("Data riwayat tidak ditemukan atau tidak lengkap.");
+        alert("Data riwayat tidak ditemukan.");
+    }
+}
+
+
+
+
+        // Fungsi untuk menutup modal
+        function closeModal() {
+            const modal = document.getElementById('detailModal');
+            modal.classList.remove('flex');
+            modal.classList.add('hidden');
+        }
+    </script>
+</x-layout-dokter>

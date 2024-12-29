@@ -70,19 +70,21 @@ Route::get('/dokter/dashboard', [AuthController::class, 'dashboard'])->name('dok
 // Route::get('/dokter/dashboard', [DokterController::class, 'index'])->name('dokter.dashboard');
 Route::get('/dokter/jadwal-periksa', [JadwalPeriksaController::class, 'index'])->name('dokter.jadwal-periksa');
 Route::post('dokter/jadwal-periksa-store', [JadwalPeriksaController::class, 'store'])->name('dokter.jadwal-periksa.store');
-Route::delete('jadwal-periksa/{jadwal_periksa}', [JadwalPeriksaController::class, 'destroy'])->name('dokter.jadwal-periksa.destroy');
+Route::delete('/jadwal-periksa/{jadwal_periksa}', [JadwalPeriksaController::class, 'destroy'])->name('dokter.jadwal-periksa.destroy');
 Route::get('dokter/jadwal-periksa/{jadwal_periksa}/edit', [JadwalPeriksaController::class, 'edit'])->name('dokter.jadwal-periksa.edit');
-Route::put('jadwal-periksa/{jadwal_periksa}', [JadwalPeriksaController::class, 'update'])->name('dokter.jadwal-periksa.update');
+Route::put('dokter/jadwal-periksa/{jadwal_periksa}', [JadwalPeriksaController::class, 'update'])->name('dokter.jadwal-periksa.update');
 
 
 Route::get('/dokter/periksa-pasien', [PeriksaPasienController::class, 'index'])->name('dokter.periksa-pasien');
-Route::get('/dokter/periksa-pasien/periksa/{id}', [PeriksaPasienController::class, 'periksa'])->name('dokter.periksa');
+Route::get('/dokter/periksa-pasien/periksa/{periksa}', [PeriksaPasienController::class, 'periksa'])->name('dokter.periksa');
 Route::post('/dokter/periksa-pasien/periksa', [PeriksaPasienController::class, 'store'])->name('periksa.store');
+Route::get('/dokter/periksa-pasien/{periksa}/edit', [PeriksaPasienController::class, 'edit'])->name('periksa.edit');
+Route::put('/dokter/periksa-pasien/{periksa}', [PeriksaPasienController::class, 'update'])->name('dokter.periksa.update');
 Route::get('/dokter/riwayat-pasien', [RiwayatPasienController::class, 'index'])->name('dokter.riwayat-pasien');
-Route::middleware('auth')->group(function () {
-Route::get('/dokter/edit', [DokterController::class, 'profileEdit'])->name('dokter.edit');
-// Route::put('/dokter/{id}', [DokterController::class, 'update'])->name('dokter.update');
-});
+Route::get('/dokter/profile/', [DokterController::class, 'profile'])->name('dokter.profile');
+Route::get('/dokter/profile/edit', [DokterController::class, 'profileEdit'])->name('dokter.edit');
+Route::put('/dokter/profile/update/{dokter}', [DokterController::class, 'profileUpdate'])->name('dokter.update');
+Route::post('/dokter/jadwal-periksa/{jadwal_periksa}/update-status', [JadwalPeriksaController::class, 'updateStatus']);
 
 
 Route::get('/login/pasien', [AuthController::class, 'showPasienLogin'])->name('login.pasien');
@@ -94,4 +96,5 @@ Route::post('/pasien/daftar-poli', [DaftarPoliController::class, 'store'])->name
 
 Route::get('/pasien/dashboard', [PasienController::class, 'dashboard'])->name('pasien.dashboard');
 Route::get('/pasien/poli', [DaftarPoliController::class, 'showPoliPasien'])->name('pasien.poli');
+
 

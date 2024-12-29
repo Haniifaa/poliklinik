@@ -72,147 +72,180 @@
             <table class="w-full text-sm text-left text-gray-500">
                 <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                     <tr>
-                        <th scope="col" class="px-6 py-3">Product name</th>
-                        <th scope="col" class="px-6 py-3">Color</th>
-                        <th scope="col" class="px-6 py-3">Category</th>
-                        <th scope="col" class="px-6 py-3">Accessories</th>
-                        <th scope="col" class="px-6 py-3">Available</th>
-                        <th scope="col" class="px-6 py-3">Price</th>
-                        <th scope="col" class="px-6 py-3">Weight</th>
+                        <th scope="col" class="px-6 py-3">No</th>
+                        <th scope="col" class="px-6 py-3">Poli</th>
+                        <th scope="col" class="px-6 py-3">Dokter</th>
+                        <th scope="col" class="px-6 py-3">Hari</th>
+                        <th scope="col" class="px-6 py-3">Mulai</th>
+                        <th scope="col" class="px-6 py-3">Selesai</th>
+                        <th scope="col" class="px-6 py-3">Antrian</th>
+                        <th scope="col" class="px-6 py-3">Status</th>
                         <th scope="col" class="px-6 py-3">Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     <!-- Row 1 -->
-                    <tr class="bg-white border-b hover:bg-gray-50">
-                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                            Apple MacBook Pro 17"
-                        </th>
-                        <td class="px-6 py-4">Silver</td>
-                        <td class="px-6 py-4">Laptop</td>
-                        <td class="px-6 py-4">Yes</td>
-                        <td class="px-6 py-4">Yes</td>
-                        <td class="px-6 py-4">$2999</td>
-                        <td class="px-6 py-4">3.0 lb.</td>
-                        <td class="flex items-center px-6 py-4">
-                            <a href="#" class="font-medium text-blue-600 hover:underline">Edit</a>
-                            <a href="#" class="font-medium text-red-600 hover:underline ml-3">Remove</a>
-                        </td>
-                    </tr>
-
-                    <!-- Row 2 -->
-                    <tr class="bg-white border-b hover:bg-gray-50">
-                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                            Dell XPS 13
-                        </th>
-                        <td class="px-6 py-4">Black</td>
-                        <td class="px-6 py-4">Laptop</td>
-                        <td class="px-6 py-4">No</td>
-                        <td class="px-6 py-4">Yes</td>
-                        <td class="px-6 py-4">$1599</td>
-                        <td class="px-6 py-4">2.6 lb.</td>
-                        <td class="flex items-center px-6 py-4">
-                            <a href="#" class="font-medium text-blue-600 hover:underline">Edit</a>
-                            <a href="#" class="font-medium text-red-600 hover:underline ml-3">Remove</a>
-                        </td>
-                    </tr>
-
-                    <!-- Row 3 -->
-                    <tr class="bg-white border-b hover:bg-gray-50">
-                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                            HP Spectre x360
-                        </th>
-                        <td class="px-6 py-4">Grey</td>
-                        <td class="px-6 py-4">Laptop</td>
-                        <td class="px-6 py-4">Yes</td>
-                        <td class="px-6 py-4">Yes</td>
-                        <td class="px-6 py-4">$1799</td>
-                        <td class="px-6 py-4">2.9 lb.</td>
-                        <td class="flex items-center px-6 py-4">
-                            <a href="#" class="font-medium text-blue-600 hover:underline">Edit</a>
-                            <a href="#" class="font-medium text-red-600 hover:underline ml-3">Remove</a>
-                        </td>
-                    </tr>
-
-                    <!-- Row 4 -->
-                    <tr class="bg-white border-b hover:bg-gray-50">
-                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                            Lenovo ThinkPad X1
-                        </th>
-                        <td class="px-6 py-4">Black</td>
-                        <td class="px-6 py-4">Laptop</td>
-                        <td class="px-6 py-4">Yes</td>
-                        <td class="px-6 py-4">No</td>
-                        <td class="px-6 py-4">$1399</td>
-                        <td class="px-6 py-4">3.2 lb.</td>
-                        <td class="flex items-center px-6 py-4">
-                            <a href="#" class="font-medium text-blue-600 hover:underline">Edit</a>
-                            <a href="#" class="font-medium text-red-600 hover:underline ml-3">Remove</a>
-                        </td>
-                    </tr>
-
-                    <!-- Additional Rows for longer table -->
-                    <tr class="bg-white border-b hover:bg-gray-50">
-                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                            Asus ZenBook 14
-                        </th>
-                        <td class="px-6 py-4">Blue</td>
-                        <td class="px-6 py-4">Laptop</td>
-                        <td class="px-6 py-4">Yes</td>
-                        <td class="px-6 py-4">Yes</td>
-                        <td class="px-6 py-4">$1499</td>
-                        <td class="px-6 py-4">2.7 lb.</td>
-                        <td class="flex items-center px-6 py-4">
-                            <a href="#" class="font-medium text-blue-600 hover:underline">Edit</a>
-                            <a href="#" class="font-medium text-red-600 hover:underline ml-3">Remove</a>
-                        </td>
-                    </tr>
+                    @forelse($riwayat as $r)
 
                     <tr class="bg-white border-b hover:bg-gray-50">
-                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                            Microsoft Surface Laptop 3
-                        </th>
-                        <td class="px-6 py-4">Platinum</td>
-                        <td class="px-6 py-4">Laptop</td>
-                        <td class="px-6 py-4">No</td>
-                        <td class="px-6 py-4">Yes</td>
-                        <td class="px-6 py-4">$1299</td>
-                        <td class="px-6 py-4">2.8 lb.</td>
-                        <td class="flex items-center px-6 py-4">
-                            <a href="#" class="font-medium text-blue-600 hover:underline">Edit</a>
-                            <a href="#" class="font-medium text-red-600 hover:underline ml-3">Remove</a>
+                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">{{ $loop->iteration }}</th>
+                        <td class="px-6 py-4">{{ $r->jadwal?->dokter?->poli?->nama_poli}}</td>
+                        <td class="px-6 py-4">{{ $r->jadwal?->dokter?->nama ?? 'Tidak ada data' }}</td>
+                        <td class="px-6 py-4">{{ $r->jadwal?->hari ?? 'Tidak ada data' }}</td>
+                        <td class="px-6 py-4">{{ $r->jadwal?->jam_mulai ?? 'Tidak ada data' }}</td>
+                        <td class="px-6 py-4">{{ $r->jadwal?->jam_selesai ?? 'Tidak ada data'}}</td>
+                        <td class="px-6 py-4">{{ $r->no_antrian ?? 'Tidak ada data'}}</td>
+                        <td class="px-6 py-4 w-40">
+                            <span class="px-2 py-1 text-xs font-semibold rounded-full
+                                {{ $r->periksa ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700' }}">
+                                {{ $r->periksa ? 'Sudah Diperiksa' : 'Belum Diperiksa' }}
+                            </span>
                         </td>
+                                                                        <td class="flex items-center px-6 py-4">
+                                                    <button id="openModal" class="font-medium text-blue-600 hover:underline bg-transparent border-none cursor-pointer">Detail Riwayat</button>
+                                                </td>
                     </tr>
+                    @empty
+                    <tr>
+                        <td colspan="3" class="text-center px-6 py-4">Tidak ada data untuk ditampilkan.</td>
+                    </tr>
+
+                    @endforelse
+
                 </tbody>
             </table>
+            <!-- Navigasi Pagination -->
+<div class="mt-4">
+    {{ $riwayat->links() }}
+</div>
+
         </div>
-    </div>
+
+
+
+
 
     </div>
+
+
+    </div>
+
+<!-- Modal Structure -->
+<div id="modalDetail" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden">
+    <div class="bg-white p-6 rounded-lg w-3/4 md:w-1/2">
+      <!-- Modal Header -->
+      <div class="flex justify-between items-center">
+        <h3 class="text-xl font-semibold">Detail Riwayat</h3>
+        <button id="closeModal" class="text-gray-600 hover:text-gray-900">&times;</button>
+      </div>
+
+      <!-- Modal Body (Tables and Information) -->
+      <div class="mt-4">
+        <!-- Tabel Riwayat -->
+        <table class="min-w-full table-auto border-collapse">
+          <thead>
+            <tr>
+              <th class="px-4 py-2 border">Nama Poli</th>
+              <th class="px-4 py-2 border">Nama Dokter</th>
+              <th class="px-4 py-2 border">Hari</th>
+              <th class="px-4 py-2 border">Mulai</th>
+              <th class="px-4 py-2 border">Selesai</th>
+              <th class="px-4 py-2 border">Nomor Antrian</th>
+            </tr>
+          </thead>
+          <tbody>
+            @foreach($riwayat as $r)
+
+                    <tr class="bg-white border-b hover:bg-gray-50">
+                        <td class="px-6 py-4">{{ $r->jadwal?->dokter?->poli?->nama_poli}}</td>
+                        <td class="px-6 py-4">{{ $r->jadwal?->dokter?->nama ?? 'Tidak ada data' }}</td>
+                        <td class="px-6 py-4">{{ $r->jadwal?->hari ?? 'Tidak ada data' }}</td>
+                        <td class="px-6 py-4">{{ $r->jadwal?->jam_mulai ?? 'Tidak ada data' }}</td>
+                        <td class="px-6 py-4">{{ $r->jadwal?->jam_selesai ?? 'Tidak ada data'}}</td>
+                        <td class="px-6 py-4">{{ $r->no_antrian ?? 'Tidak ada data'}}</td>
+            </tr>
+
+          </tbody>
+        </table>
+
+        <!-- Additional Details -->
+        <div class="mt-6">
+          <p><strong>Tanggal Periksa:</strong>{{ $r->periksa?->tgl_periksa}}</p>
+          <p><strong>Catatan:</strong> {{ $r->periksa?->catatan}}</p>
+          {{-- <p><strong>Daftar Obat yang Diresepkan:</strong> {{ $r->detailPeriksa?->obat?->nama_obat}}</p> --}}
+          <p class="mt-4"> <!-- Menambahkan margin-top untuk memberi jarak -->
+            <strong class="text-xl font-semibold">Biaya Periksa:</strong> <!-- Memperbesar teks "Biaya Periksa" -->
+            <span class="bg-purple-600 text-white px-4 py-2 rounded-full text-xl font-semibold">
+                {{ 'Rp ' . number_format($r->periksa?->biaya_periksa, 0, ',', '.') }}
+            </span>
+        </p>
+
+                </div>
+      </div>
+      @endforeach
+
+
+      <!-- Modal Footer -->
+      <div class="mt-6 text-right">
+        <button id="closeModalBtn" class="bg-blue-600 text-white px-4 py-2 rounded">Tutup</button>
+      </div>
+    </div>
+  </div>
 
 
     <script>
-    document.addEventListener('DOMContentLoaded', function () {
-    const poliSelect = document.getElementById('poli');
-    const jadwalSelect = document.getElementById('jadwal');
-    const jadwalOptions = Array.from(jadwalSelect.options); // Simpan semua opsi jadwal
+        document.addEventListener('DOMContentLoaded', function () {
+            const poliSelect = document.getElementById('poli');
+            const jadwalSelect = document.getElementById('jadwal');
+            const jadwalOptions = jadwalSelect ? Array.from(jadwalSelect.options) : []; // Simpan semua opsi jadwal jika jadwalSelect ada
 
-    poliSelect.addEventListener('change', function () {
-        const selectedPoli = this.value;
+            if (poliSelect && jadwalSelect) {
+                poliSelect.addEventListener('change', function () {
+                    const selectedPoli = this.value;
 
-        // Reset opsi jadwal
-        jadwalSelect.innerHTML = '<option value="">Pilih Jadwal</option>';
+                    // Reset opsi jadwal
+                    jadwalSelect.innerHTML = '<option value="">Pilih Jadwal</option>';
 
-        // Filter jadwal berdasarkan poli yang dipilih
-        const filteredOptions = jadwalOptions.filter(option => option.dataset.poli === selectedPoli);
+                    // Filter jadwal berdasarkan poli yang dipilih
+                    const filteredOptions = jadwalOptions.filter(option => option.dataset.poli === selectedPoli);
 
-        // Tambahkan opsi yang difilter ke dropdown
-        filteredOptions.forEach(option => {
-            jadwalSelect.appendChild(option.cloneNode(true));
+                    // Tambahkan opsi yang difilter ke dropdown
+                    filteredOptions.forEach(option => {
+                        jadwalSelect.appendChild(option.cloneNode(true));
+                    });
+                });
+            }
+
+            const modal = document.getElementById('modalDetail');
+            const openModalBtn = document.getElementById('openModal');
+            const closeModalBtn = document.getElementById('closeModal');
+            const closeModalButton = document.getElementById('closeModalBtn');
+
+            if (modal && openModalBtn && closeModalBtn && closeModalButton) {
+                // Open Modal Function
+                openModalBtn.addEventListener('click', function(event) {
+                    event.preventDefault(); // Prevent link from redirecting
+                    modal.classList.remove('hidden');
+                });
+
+                // Close Modal Function
+                closeModalBtn.addEventListener('click', function() {
+                    modal.classList.add('hidden');
+                });
+
+                closeModalButton.addEventListener('click', function() {
+                    modal.classList.add('hidden');
+                });
+
+                // Close modal when clicking outside of modal content
+                window.addEventListener('click', function(event) {
+                    if (event.target === modal) {
+                        modal.classList.add('hidden');
+                    }
+                });
+            }
         });
-    });
-});
+        </script>
 
-</script>
 
 </x-layout-pasien>

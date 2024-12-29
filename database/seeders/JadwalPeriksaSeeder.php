@@ -27,6 +27,7 @@ class JadwalPeriksaSeeder extends Seeder
                 'id_dokter' => 2,
                 'hari' => 'Selasa',
                 'jam_mulai' => '09:00:00',
+                'jam_selesai' => '12:00:00',
                 'status' => 'Tidak Aktif',
             ],
         ]);

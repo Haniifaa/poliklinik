@@ -38,8 +38,15 @@ class Obat extends Model
     }
 
     public function detailPeriksa()
+    {
+        return $this->belongsToMany(Periksa::class, 'detail_periksa');  // Hapus withPivot('jumlah')
+    }
+
+// App\Models\Obat.php
+
+public function periksa()
 {
-    return $this->hasMany(DetailPeriksa::class, 'id_obat', 'id');
+    return $this->belongsToMany(Periksa::class, 'detail_periksa', 'id_obat', 'id_periksa');
 }
 
 }

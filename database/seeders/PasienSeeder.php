@@ -18,14 +18,14 @@ class PasienSeeder extends Seeder
             [
                 'nama' => 'John Doe',
                 'alamat' => 'Jl. Mawar No. 123',
-                'no_ktp' => '1234567890123456',
+                'no_ktp' => '1234567890123456',  // Nomor KTP unik
                 'no_hp' => '081234567890',
                 'no_rm' => 'RM001',
             ],
             [
                 'nama' => 'Jane Doe',
                 'alamat' => 'Jl. Melati No. 456',
-                'no_ktp' => '9876543210987654',
+                'no_ktp' => '9876543210987654',  // Nomor KTP unik
                 'no_hp' => '081987654321',
                 'no_rm' => 'RM002',
             ],

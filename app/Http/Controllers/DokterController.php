@@ -112,44 +112,46 @@ public function update(Request $request, $id)
         }
     }
 
-
-    public function profileEdit()
+    public function profile()
 {
-    $dokter = Dokter::where('id', Auth::id())->firstOrFail();
+    $dokter = session('dokter'); // Ambil data dokter dari sesi
+    $dokter = Dokter::with('poli')->findOrFail($dokter->id); // Cari dokter berdasarkan id dari sesi
+    $poli = Poli::all(); // Semua data poli
+    return view('dokter.profile', compact('dokter', 'poli'));
 
-    // Tampilkan view dokter/edit
-    return view('dokter.edit', compact('dokter'));
 }
 
-// public function profileUpdate(Request $request, $id)
-// {
-//     // Mencari pasien berdasarkan ID
-//     $dokter = Dokter::find($id);
 
-//     // Jika pasien tidak ditemukan, kembalikan response JSON dengan error 404
-//     if (!$dokter) {
-//         return response()->json(['error' => 'Dokter tidak ditemukan'], 404);
-//     }
+    public function profileEdit()
+    {
+        $dokter = session('dokter');
 
-//     // Validasi data input
-//     $validated = $request->validate([
-//         'nama' => 'required|max:255',
-//         'alamat' => 'required|max:255',
-//         'no_hp' => 'required|max:50',
-//         'id_poli' => 'required|exists:poli,id',
-//     ], [
-//         'nama.required' => 'Nama dokter harus diisi.',
-//         'alamat.required' => 'Alamat dokter harus diisi.',
-//         'no_hp.required' => 'Nomor HP harus diisi.',
-//         'id_poli.required' => 'Poli harus dipilih.',
-//     ]);
+        // $dokterId = session('dokter')->id;
 
-//     // Update data pasien setelah validasi berhasil
-//     $dokter->update($validated);
+        // $dokter = Dokter::findOrFail($id);
+        $poli = Poli::all(); // Mengambil semua data poli
+        return view('dokter.edit', compact('dokter', 'poli'));
+    }
 
-//     // Kembalikan response ke halaman sebelumnya dengan pesan sukses
-//     return redirect()->route('dokter.edit')->with('success', 'Dokter berhasil diperbarui.');
-// }
+    public function profileUpdate(Request $request, $id)
+    {
+        $request->validate([
+            'nama' => 'required|string|max:255',
+            'alamat' => 'required|string|max:500',
+            'no_hp' => 'required|string|max:15',
+            'id_poli' => 'required|exists:poli,id',
+        ]);
+
+        $dokter = Dokter::findOrFail($id);
+        $dokter->update([
+            'nama' => $request->nama,
+            'alamat' => $request->alamat,
+            'no_hp' => $request->no_hp,
+            'id_poli' => $request->id_poli,
+        ]);
+
+        return redirect()->route('dokter.profile', $dokter->id)->with('success', 'Profil dokter berhasil diperbarui.');
+    }
 
 
 }

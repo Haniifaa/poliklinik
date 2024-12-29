@@ -23,7 +23,7 @@
             </div>
             <div class="flex items-center">
                 <div class="flex items-center ms-3">
-                    <a href="{{ route('dokter.edit') }}"
+                    <a href="{{ route('dokter.profile') }}"
             class="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300">
             <span class="sr-only">Edit Profile</span>
             <img class="w-8 h-8 rounded-full" src="https://flowbite.com/docs/images/people/profile-picture-5.jpg"

@@ -74,31 +74,28 @@
                     </div>
                   </div>
 
-                  <!-- Obat -->
-                  <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-                    <div class="sm:col-span-6">
-                        <label for="id_obat" class="block text-sm font-medium text-gray-900">Obat</label>
-                        <div class="mt-2">
-                            <select name="id_obat" id="id_obat" onchange="updateBiayaPeriksa()" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm">
-                                <option value="" disabled selected>Pilih Obat</option>
-                                @foreach ($obatList as $obat)
-                                    <option value="{{ $obat->id }}" data-harga="{{ $obat->harga }}" data-kemasan="{{ $obat->kemasan }}"
-                                        >{{ $obat->nama_obat }} - {{ $obat->kemasan }} (Rp{{ number_format($obat->harga, 0, ',', '.') }})</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
+                  <div class="mt-4">
+                    <label for="obat-list" class="block text-sm font-medium text-gray-900">Obat</label>
+                    <div id="obat-list"></div>
+                    <button
+                        type="button"
+                        id="tambah-obat-btn"
+                        onclick="addObatRow()"
+                        class="mt-2 px-3 py-1 bg-purple-500 text-white text-sm rounded hover:bg-purple-600">
+                        Tambah Obat
+                    </button>
                 </div>
 
-                <!-- Biaya Pemeriksaan -->
-                <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-                    <div class="sm:col-span-3">
-                        <label for="biaya-periksa" class="block text-sm font-medium text-gray-900">Biaya Pemeriksaan</label>
-                        <div class="mt-2">
-                            <input type="number" name="biaya_periksa" id="biaya-periksa" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm" readonly>
-                        </div>
-                    </div>
-                </div>
+
+<!-- Biaya Pemeriksaan -->
+<div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+    <div class="sm:col-span-3">
+        <label for="biaya-periksa" class="block text-sm font-medium text-gray-900">Biaya Pemeriksaan</label>
+        <div class="mt-2">
+            <input type="number" name="biaya_periksa" id="biaya-periksa" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm" readonly>
+        </div>
+    </div>
+</div>
 
 
 
@@ -115,40 +112,81 @@
 </div>
 
 <script>
-    function updateBiayaPeriksa() {
-    // Ambil harga obat yang dipilih
-    var obatSelect = document.getElementById("id_obat");
-    var selectedOption = obatSelect.options[obatSelect.selectedIndex];
-    var biayaObat = selectedOption ? parseFloat(selectedOption.getAttribute("data-harga")) : 0;
+    // Fungsi untuk menambah baris obat
+function addObatRow() {
+        var obatContainer = document.getElementById("obat-list");
 
-    // Biaya dokter tetap
-    var biayaDokter = 150000;
+        var uniqueId = Date.now();
 
-    // Hitung total biaya pemeriksaan
-    var biayaPeriksa = biayaObat + biayaDokter;
+        var obatHtml = `
+    <div class="flex items-center gap-4 mb-4" id="obat-group-${uniqueId}">
+        <select name="id_obat[]" class="obat-select block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm" required>
+            <option value="" disabled selected>Pilih Obat</option>
+            @foreach ($obatList as $obat)
+                <option value="{{ $obat->id }}" data-harga="{{ $obat->harga }}">
+                    {{ $obat->nama_obat }} - {{ $obat->kemasan }} (Rp{{ number_format($obat->harga, 0, ',', '.') }})
+                </option>
+            @endforeach
+        </select>
+        <button type="button" class="hapus-obat-btn text-red-500 hover:underline" data-id="${uniqueId}">Hapus</button>
+    </div>
+`;
 
-    // Update input Biaya Pemeriksaan
-    document.getElementById("biaya-periksa").value = biayaPeriksa;
+        obatContainer.insertAdjacentHTML("beforeend", obatHtml);
+    }
+
+    document.getElementById("obat-list").addEventListener("click", function(e) {
+        if (e.target.classList.contains("hapus-obat-btn")) {
+            var id = e.target.getAttribute("data-id");
+            var group = document.getElementById(`obat-group-${id}`);
+            if (group) {
+                group.remove();
+            }
+        }
+    });
+
+// Menambahkan event listener ke tombol "Tambah Obat"
+//document.getElementById("tambah-obat-btn").addEventListener("click", addObatRow);
+
+// Delegate event listener untuk elemen dinamis
+// document.getElementById("obat-list").addEventListener("click", function(e) {
+//     if (e.target.classList.contains("hapus-obat-btn")) {
+//         var id = e.target.getAttribute("data-id");
+//         var group = document.getElementById(`obat-group-${id}`);
+//         if (group) {
+//             group.remove();
+//             updateBiayaPeriksa();
+//         }
+//     }
+// });
+
+// Event listener untuk input jumlah obat atau pilihan obat
+document.getElementById("obat-list").addEventListener("input", function(e) {
+    if (e.target.classList.contains("jumlah-obat-input") || e.target.classList.contains("obat-select")) {
+        updateBiayaPeriksa();
+    }
+});
+
+// Fungsi untuk menghitung biaya pemeriksaan
+function updateBiayaPeriksa() {
+    var biayaDokter = 150000; // Biaya tetap dokter
+    var totalBiayaObat = 0;
+
+    // Iterasi melalui semua select obat
+    document.querySelectorAll("#obat-list .obat-select").forEach(function(select) {
+        var selectedOption = select.options[select.selectedIndex];
+        var harga = parseFloat(selectedOption.getAttribute("data-harga")) || 0;
+
+        totalBiayaObat += harga; // Tambahkan harga obat ke total
+    });
+
+    // Total biaya pemeriksaan
+    var totalBiaya = biayaDokter + totalBiayaObat;
+    document.getElementById("biaya-periksa").value = totalBiaya;
 }
 
-// document.getElementById('periksa-form').addEventListener('submit', function(event) {
-//         // Mengambil nilai dari input datetime-local
-//         var tglPeriksa = document.getElementById('tgl_periksa').value;
-
-//         // Mengubah format dari Y-m-d\TH:i ke Y-m-d H:i:s
-//         if (tglPeriksa) {
-//             var formattedDate = tglPeriksa.replace('T', ' ') + ":00"; // Menambahkan detik ":00"
-//             document.getElementById('tgl_periksa').value = formattedDate; // Update nilai input
-//         }
-//     });
-
-// function addSecondsToDate() {
-//     var tglPeriksa = document.getElementById('tgl_periksa').value;
-//     if (tglPeriksa && tglPeriksa.length === 16) { // jika panjangnya hanya Y-m-d H:i
-//         document.getElementById('tgl_periksa').value = tglPeriksa + ":00"; // Menambahkan detik (00)
-//     }
-// }
 
 </script>
+
 
 </x-layout-dokter>

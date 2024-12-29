@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Poli;
+use App\Models\DaftarPoli;
 use App\Models\Pasien;
 use Illuminate\Http\Request;
 
@@ -124,8 +125,10 @@ public function update(Request $request, $id)
     }
 
     // Menampilkan daftar jadwal periksa
-    public function pasienpoli()
-    {
-        return view('pasien.poli');
-    }
+    // public function pasienpoli()
+    // {
+    //     $riwayat = DaftarPoli::with(['pasien', 'dokter', 'poli', 'jadwal', 'periksa'])->paginate(10);
+
+    //     return view('pasien.poli', compact('riwayat'));
+    // }
 }

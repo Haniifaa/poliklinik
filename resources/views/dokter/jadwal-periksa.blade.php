@@ -54,7 +54,7 @@
                             <th scope="col" class="px-6 py-3">Jam Mulai</th>
                             <th scope="col" class="px-6 py-3">Jam Selesai</th>
                             <th scope="col" class="px-6 py-3">Status</th>
-                            <th scope="col" class="px-6 py-3">Action</th>
+                            {{-- <th scope="col" class="px-6 py-3">Action</th> --}}
                         </tr>
                     </thead>
                     <tbody>
@@ -67,20 +67,21 @@
                             <td class="px-6 py-4">{{ $jadwal->hari }}</td>
                             <td class="px-6 py-4">{{ $jadwal->jam_mulai }}</td>
                             <td class="px-6 py-4">{{ $jadwal->jam_selesai }}</td>
-                            <td class="px-6 py-4">
-                                <div class="flex items-center">
-                                    <div class="h-2.5 w-2.5 rounded-full {{ $jadwal->status == 'Aktif' ? 'bg-green-500' : 'bg-red-500' }} me-2"></div>
-                                    {{ $jadwal->status }}
+                            <td class="px-6 py-4 flex items-center">
+                                <div class="flex items-center me-2">
+                                    <div id="status-indicator-{{ $jadwal->id }}" data-id="{{ $jadwal->id }}"
+                                         class="h-2.5 w-2.5 rounded-full {{ $jadwal->status == 'Aktif' ? 'bg-green-500' : 'bg-red-500' }} me-2">
+                                    </div>
                                 </div>
+                                <select onchange="updateStatus({{ $jadwal->id }}, this.value)"
+                                        class="border border-gray-300 rounded p-1 focus:outline-none focus:ring focus:ring-blue-200">
+                                    <option value="Aktif" {{ $jadwal->status == 'Aktif' ? 'selected' : '' }}>Aktif</option>
+                                    <option value="Tidak Aktif" {{ $jadwal->status == 'Tidak Aktif' ? 'selected' : '' }}>Tidak Aktif</option>
+                                </select>
                             </td>
-                            <td class="flex items-center px-6 py-4">
-                                <button onclick="editJadwal({{ $jadwal->id }})" class="font-medium text-blue-600 hover:underline" aria-label="Edit Jadwal">Edit</button>
-                                <form action="{{ route('dokter.jadwal-periksa.destroy', $jadwal->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus data?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="font-medium text-red-600 hover:underline ml-3">Hapus</button>
-                                </form>
-                            </td>
+
+
+
                         </tr>
 
                         @endforeach
@@ -174,7 +175,7 @@
             <div class="flex justify-end space-x-3 mt-4">
                 <button
                     type="button"
-                    onclick="closeModal('tambahJadwalModal')"
+                    onclick="closeModal('tambahmodal')"
                     class="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600"
                 >
                     Batal
@@ -191,7 +192,7 @@
 </div>
 
 
-<!-- Modal Edit Jadwal Periksa -->
+{{-- <!-- Modal Edit Jadwal Periksa -->
 <div id="editmodal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center hidden z-50">
     <div class="bg-white rounded-lg shadow-lg w-full max-w-4xl p-6">
         <h2 class="text-xl font-bold mb-4">Edit Jadwal Periksa</h2>
@@ -272,7 +273,7 @@
             <div class="flex justify-end space-x-2 mt-4">
                 <button
                     type="button"
-                    onclick="closeModal('editJadwalModal')"
+                    onclick="closeModal('editmodal')"
                     class="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600"
                 >
                     Batal
@@ -286,7 +287,7 @@
             </div>
         </form>
     </div>
-</div>
+</div> --}}
 
         </div>
 
@@ -295,7 +296,7 @@
         <script>
 
             // Fungsi untuk membuka modal
-            function openModal(modalId) {
+function openModal(modalId) {
     const modal = document.getElementById(modalId);
     if (modal) {
         modal.classList.remove('hidden'); // Hapus kelas 'hidden'
@@ -305,39 +306,109 @@
     }
 }
 
-// Fungsi untuk membuka modal edit jadwal dengan data dari server
-function editJadwal(id) {
-
-    openModal('editmodal');
-
-    // Panggil API untuk mendapatkan data jadwal
-    fetch(`/dokter/jadwal-periksa/${id}/edit`)
-        .then(response => response.json())
-        .then(data => {
-                // Isi data dalam modal edit
-                document.getElementById('edit_jam_mulai').value = data.jam_mulai;
-                document.getElementById('edit_jam_selesai').value = data.jam_selesai;
-                document.getElementById('edit_status').value = data.status;
-            })
-        .catch(error => console.error('Error:', error));
-
-                // // Update action form
-                // document.getElementById('editJadwalForm').action = `/jadwal-periksa/${jadwalId}`;
-
-                // // Tampilkan modal
-                // document.getElementById('editmodal').classList.remove('hidden');
-                // })
-
-
-                //     .catch(error => {
-                //         console.error('Terjadi kesalahan:', error);
-                //         alert('Gagal mengambil data jadwal.');
-                //     });
-}
-
+// Fungsi untuk menutup modal
 function closeModal(modalId) {
-document.getElementById(modalId).classList.add('hidden');
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.classList.add('hidden');  // Tambahkan kelas 'hidden'
+        modal.classList.remove('flex'); // Hapus kelas 'flex'
+
+        // Reset data input modal
+        document.getElementById('editJadwalForm').reset();
+    } else {
+        console.error(`Modal dengan ID "${modalId}" tidak ditemukan.`);
+    }
 }
+
+
+
+// Fungsi untuk membuka modal edit jadwal dengan data dari server
+// Fungsi untuk membuka modal edit jadwal dengan data dari server
+// function editJadwal(jadwal_periksa) {
+//     // Panggil API untuk mendapatkan data jadwal
+//     fetch(`/dokter/jadwal-periksa/${jadwal_periksa}/edit`)
+//         .then(response => {
+//             if (!response.ok) {
+//                 throw new Error('Gagal mengambil data dari server.');
+//             }
+//             return response.json();
+//         })
+//         .then(data => {
+//             // Isi data dalam modal edit
+//             document.getElementById('edit_jam_mulai').value = data.jam_mulai;
+//             document.getElementById('edit_jam_selesai').value = data.jam_selesai;
+//             document.getElementById('edit_status').value = data.status;
+//             document.getElementById('edit_hari').value = data.hari; // Pastikan hari terisi dengan benar
+
+//             // Perbarui action form
+//             document.getElementById('editJadwalForm').action = `/dokter/jadwal-periksa/${jadwal_periksa}`;
+
+//             // Tampilkan modal setelah data terisi
+//             openModal('editmodal');
+//         })
+//         .catch(error => {
+//             console.error('Terjadi kesalahan:', error);
+//             alert('Gagal mengambil data jadwal.');
+//         });
+// }
+
+// Ambil CSRF Token dari meta tag
+const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+// Fungsi untuk memperbarui status dan indikator status
+function updateStatus(jadwal_periksa, newStatus) {
+    // Pengecekan apakah ada jadwal lain yang aktif
+    const allJadwal = document.querySelectorAll('.jadwal-status'); // Ganti dengan selector yang sesuai untuk status jadwal lainnya
+    let isAnyActive = false;
+
+    // Loop untuk memeriksa apakah ada jadwal dengan status 'Aktif'
+    allJadwal.forEach(jadwal => {
+        if (jadwal.textContent.trim() === 'Aktif') {
+            isAnyActive = true;
+        }
+    });
+
+    // Jika ada jadwal yang aktif dan ingin mengubah status menjadi 'Aktif', batalkan
+    if (newStatus === 'Aktif' && isAnyActive) {
+        alert('Hanya satu jadwal yang bisa aktif pada satu waktu.');
+        return; // Jangan lanjutkan jika ada jadwal lain yang aktif
+    }
+
+    // Kirim permintaan POST untuk memperbarui status
+    fetch(`/dokter/jadwal-periksa/${jadwal_periksa}/update-status`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': csrfToken // Gunakan CSRF Token dari meta tag
+        },
+        body: JSON.stringify({ status: newStatus })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Perbarui warna indikator berdasarkan status baru
+            const indicator = document.getElementById(`status-indicator-${jadwal_periksa}`);
+            if (indicator) {
+                // Hapus kelas indikator lama
+                indicator.classList.remove('bg-red-500', 'bg-green-500');
+                // Tambahkan kelas indikator baru sesuai status
+                setTimeout(() => {
+                    indicator.classList.add(newStatus === 'Aktif' ? 'bg-green-500' : 'bg-red-500');
+                }, 100); // Delay untuk memastikan refresh
+            } else {
+                console.error(`Indikator dengan ID "status-indicator-${jadwal_periksa}" tidak ditemukan.`);
+            }
+            alert('Status berhasil diperbarui');
+        } else {
+            alert('Gagal memperbarui status');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Terjadi kesalahan, coba lagi nanti');
+    });
+}
+
 
 
         </script>

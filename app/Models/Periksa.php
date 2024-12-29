@@ -37,7 +37,25 @@ class Periksa extends Model
 
     public function detailPeriksa()
     {
-        return $this->hasOne(DetailPeriksa::class, 'id_periksa');
+        return $this->hasMany(DetailPeriksa::class, 'id_periksa', 'id');
     }
+
+    public function pasien()
+    {
+        return $this->belongsTo(Pasien::class, 'id_pasien', 'id');
+    }
+
+    // Periksa model relasi
+    public function obat()
+    {
+        return $this->belongsToMany(Obat::class, 'detail_periksa', 'id_periksa', 'id_obat');
+    }
+
+
+    // public function obat()
+    // {
+    //     return $this->belongsToMany(Obat::class, 'periksa_obat', 'id_periksa', 'id_obat')
+    //         ->withPivot('jumlah'); // jika ada kolom tambahan di tabel pivot seperti 'jumlah'
+    // }
 
 }
