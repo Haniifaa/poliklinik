@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Pasien;
 use App\Models\Poli;
+use App\Models\Periksa;
+use App\Models\DaftarPoli;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -31,9 +33,28 @@ class PasienController extends Controller
         if (!$pasien) {
             return redirect()->route('login.pasien')->with('error', 'Silakan daftar terlebih dahulu.');
         }
+        $riwayat = Periksa::with(['daftarPoli.pasien', 'daftarPoli.dokter', 'detailPeriksa.obat'])
+        ->whereHas('daftarPoli', function ($query) use ($pasien) {
+            $query->where('id_pasien', $pasien->id);
+        })
+        ->orderBy('tgl_periksa', 'desc')
+        ->limit(10) // Menampilkan 10 riwayat terakhir
+        ->get();
+
+        foreach ($riwayat as $item) {
+            // Cek apakah ada data relasi daftarPoli dan apakah sudah ada pemeriksaan terkait
+            if ($item->daftarPoli && $item->daftarPoli->periksa) {
+                // Jika sudah ada relasi periksa, anggap pemeriksaan sudah dilakukan
+                $item->status = 'sudah diperiksa';
+            } else {
+                // Jika tidak ada relasi periksa, anggap pemeriksaan belum dilakukan
+                $item->status = 'belum diperiksa';
+            }
+        }
 
 
-        return view('pasien.dashboard');
+
+        return view('pasien.dashboard', compact('riwayat'));
     }
 
     public function create()
@@ -199,48 +220,7 @@ public function update(Request $request, $id)
         // Jika terjadi error, redirect dengan pesan error
         return back()->withErrors(['message' => 'Gagal melakukan pendaftaran: ' . $e->getMessage()]);
     }
-        // $validator = Validator::make($request->all(), [
-        //     'nama' => 'required|string|max:255',
-        //     'alamat' => 'required|string',
-        //     'no_ktp' => 'required|string|unique:pasien,no_ktp',
-        //     'no_hp' => 'required|string|max:15',
-        // ], [
-        //     'nama.required' => 'Nama pasien harus diisi.',
-        //     'alamat.required' => 'Alamat pasien harus diisi.',
-        //     'no_ktp.required' => 'Nomor KTP harus diisi.',
-        //     'no_ktp.unique' => 'Nomor KTP sudah terdaftar.',
-        //     'no_hp.required' => 'Nomor HP harus diisi.',
-        // ]);
 
-        // if ($validator->fails()) {
-        //     return redirect()->back()->withErrors($validator)->withInput();
-        // }
-
-        // try {
-        //     // Generate nomor RM
-        //     $currentYearMonth = now()->format('Ym'); // TahunBulan saat ini
-        //     $totalPasien = Pasien::whereYear('created_at', now()->year)
-        //                         ->whereMonth('created_at', now()->month)
-        //                         ->count(); // Hitung jumlah pasien yang terdaftar di bulan dan tahun ini
-
-        //     $noRm = $currentYearMonth . '-' . str_pad($totalPasien + 1, 3, '0', STR_PAD_LEFT); // Format no_rm (misalnya 202412-001)
-
-        //     // Simpan data pasien dengan nomor RM yang baru
-        //     $pasienData = $request->all();
-        //     $pasienData['no_rm'] = $noRm; // Menambahkan no_rm yang sudah digenerate
-
-        //     // Simpan pasien ke database
-        //     $pasien = Pasien::create($pasienData);
-
-        //     // Simpan data pasien di sesi
-        //     session(['pasien' => $pasien]);
-
-        //     // Arahkan ke dashboard pasien
-        //     return redirect()->route('pasien.dashboard')->with('success', 'Pendaftaran berhasil. Selamat datang!');
-        // } catch (\Exception $e) {
-        //     // Jika terjadi error, redirect dengan pesan error
-        //     return back()->withErrors(['message' => 'Gagal melakukan pendaftaran: ' . $e->getMessage()]);
-        // }
     }
 
 

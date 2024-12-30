@@ -32,8 +32,8 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
             <div class="flex items-center justify-between p-4 bg-white shadow rounded-lg">
                 <div>
-                    <h3 class="text-sm text-gray-500">Total Users</h3>
-                    <p class="text-2xl font-bold text-gray-800">1,234</p>
+                    <h3 class="text-sm text-gray-500">Total Jadwal</h3>
+                    <p class="text-2xl font-bold text-gray-800">{{ $totalJadwal }}</p>
                 </div>
                 <div class="text-blue-500">
                     <svg class="w-8 h-8" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -43,8 +43,8 @@
             </div>
             <div class="flex items-center justify-between p-4 bg-white shadow rounded-lg">
                 <div>
-                    <h3 class="text-sm text-gray-500">New Orders</h3>
-                    <p class="text-2xl font-bold text-gray-800">567</p>
+                    <h3 class="text-sm text-gray-500">Total Pasien</h3>
+                    <p class="text-2xl font-bold text-gray-800">{{ $totalPasien }}</p>
                 </div>
                 <div class="text-green-500">
                     <svg class="w-8 h-8" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -52,49 +52,10 @@
                     </svg>
                 </div>
             </div>
-            <div class="flex items-center justify-between p-4 bg-white shadow rounded-lg">
-                <div>
-                    <h3 class="text-sm text-gray-500">Revenue</h3>
-                    <p class="text-2xl font-bold text-green-600">$12,345</p>
-                </div>
-                <div class="text-yellow-500">
-                    <svg class="w-8 h-8" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                        <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2Zm0 18a8 8 0 1 1 8-8 8.009 8.009 0 0 1-8 8Z"/>
-                    </svg>
-                </div>
-            </div>
+            
         </div>
 
-        <!-- Table -->
-        <div class="bg-white shadow rounded-lg overflow-hidden">
-            <div class="p-4">
-                <h3 class="text-lg font-semibold text-gray-800">Recent Orders</h3>
-            </div>
-            <table class="min-w-full bg-white">
-                <thead class="bg-gray-50">
-                    <tr>
-                        <th class="py-2 px-4 text-left text-sm font-semibold text-gray-600">Order ID</th>
-                        <th class="py-2 px-4 text-left text-sm font-semibold text-gray-600">Customer</th>
-                        <th class="py-2 px-4 text-left text-sm font-semibold text-gray-600">Total</th>
-                        <th class="py-2 px-4 text-left text-sm font-semibold text-gray-600">Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr class="border-b">
-                        <td class="py-2 px-4">#1234</td>
-                        <td class="py-2 px-4">John Doe</td>
-                        <td class="py-2 px-4">$120.00</td>
-                        <td class="py-2 px-4 text-green-600">Completed</td>
-                    </tr>
-                    <tr class="border-b">
-                        <td class="py-2 px-4">#1235</td>
-                        <td class="py-2 px-4">Jane Smith</td>
-                        <td class="py-2 px-4">$75.00</td>
-                        <td class="py-2 px-4 text-yellow-600">Pending</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+
     </div>
 </x-layout-dokter>
 

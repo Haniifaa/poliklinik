@@ -22,72 +22,55 @@
         </div>
 
 
-        <!-- Stats Cards -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-            <div class="flex items-center justify-between p-4 bg-white shadow rounded-lg">
-                <div>
-                    <h3 class="text-sm text-gray-500">Total Users</h3>
-                    <p class="text-2xl font-bold text-gray-800">1,234</p>
-                </div>
-                <div class="text-blue-500">
-                    <svg class="w-8 h-8" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                        <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2Zm0 18a8 8 0 1 1 8-8 8.009 8.009 0 0 1-8 8Z"/>
-                    </svg>
-                </div>
-            </div>
-            <div class="flex items-center justify-between p-4 bg-white shadow rounded-lg">
-                <div>
-                    <h3 class="text-sm text-gray-500">New Orders</h3>
-                    <p class="text-2xl font-bold text-gray-800">567</p>
-                </div>
-                <div class="text-green-500">
-                    <svg class="w-8 h-8" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                        <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2Zm0 18a8 8 0 1 1 8-8 8.009 8.009 0 0 1-8 8Z"/>
-                    </svg>
-                </div>
-            </div>
-            <div class="flex items-center justify-between p-4 bg-white shadow rounded-lg">
-                <div>
-                    <h3 class="text-sm text-gray-500">Revenue</h3>
-                    <p class="text-2xl font-bold text-green-600">$12,345</p>
-                </div>
-                <div class="text-yellow-500">
-                    <svg class="w-8 h-8" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                        <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2Zm0 18a8 8 0 1 1 8-8 8.009 8.009 0 0 1-8 8Z"/>
-                    </svg>
-                </div>
-            </div>
-        </div>
+        <div class="p-4 mt-14">
+            <h1 class="text-2xl font-bold text-gray-800 mb-6">Riwayat Terakhir Pasien</h1>
 
-        <!-- Table -->
-        <div class="bg-white shadow rounded-lg overflow-hidden">
-            <div class="p-4">
-                <h3 class="text-lg font-semibold text-gray-800">Recent Orders</h3>
+            <!-- Tabel Riwayat -->
+            <div class="relative w-full overflow-x-auto shadow-md sm:rounded-lg">
+                <table class="w-full text-sm text-left text-gray-500">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                        <tr>
+                            <th scope="col" class="px-6 py-3">No</th>
+                            <th scope="col" class="px-6 py-3">Tanggal Periksa</th>
+                            <th scope="col" class="px-6 py-3">Nama Dokter</th>
+                            <th scope="col" class="px-6 py-3">Keluhan</th>
+                            <th scope="col" class="px-6 py-3">Catatan</th>
+                            <th scope="col" class="px-6 py-3">Obat</th>
+                            <th scope="col" class="px-6 py-3">Biaya Periksa</th>
+                            <th scope="col" class="px-6 py-3">Status</th>
+
+                            </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($riwayat as $r)
+                            <tr class="bg-white border-b hover:bg-gray-50">
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900">{{ $loop->iteration }}</th>
+                                <td class="px-6 py-4">{{ $r->tgl_periksa }}</td>
+                                <td class="px-6 py-4">{{ $r->daftarPoli->dokter->nama }}</td>
+                                <td class="px-6 py-4">{{ $r->daftarPoli->keluhan }}</td>
+                                <td class="px-6 py-4">{{ $r->catatan }}</td>
+                                <td class="px-6 py-4">    @foreach ($r->detailPeriksa as $detail)
+                                    {{ $detail->obat->nama_obat ?? '-' }}@if (!$loop->last), @endif
+                                @endforeach
+                            </td>
+                            <td class="px-6 py-4">Rp {{ number_format($r->biaya_periksa, 0, ',', '.') }}</td>
+                            <td class="px-6 py-4 w-40">
+                                <span class="px-2 py-1 text-xs font-semibold rounded-full
+                                    {{ $r->status === 'sudah diperiksa' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700' }}">
+                                    {{ $r->status }}
+                                </span>
+                            </td>
+
+
+                        </tr>
+                        @empty
+                            <tr>
+                                <td colspan="7" class="text-center py-4">Tidak ada data pasien.</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
             </div>
-            <table class="min-w-full bg-white">
-                <thead class="bg-gray-50">
-                    <tr>
-                        <th class="py-2 px-4 text-left text-sm font-semibold text-gray-600">Order ID</th>
-                        <th class="py-2 px-4 text-left text-sm font-semibold text-gray-600">Customer</th>
-                        <th class="py-2 px-4 text-left text-sm font-semibold text-gray-600">Total</th>
-                        <th class="py-2 px-4 text-left text-sm font-semibold text-gray-600">Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr class="border-b">
-                        <td class="py-2 px-4">#1234</td>
-                        <td class="py-2 px-4">John Doe</td>
-                        <td class="py-2 px-4">$120.00</td>
-                        <td class="py-2 px-4 text-green-600">Completed</td>
-                    </tr>
-                    <tr class="border-b">
-                        <td class="py-2 px-4">#1235</td>
-                        <td class="py-2 px-4">Jane Smith</td>
-                        <td class="py-2 px-4">$75.00</td>
-                        <td class="py-2 px-4 text-yellow-600">Pending</td>
-                    </tr>
-                </tbody>
-            </table>
         </div>
     </div>
 </x-layout-pasien>

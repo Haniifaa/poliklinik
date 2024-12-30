@@ -11,6 +11,11 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\Pasien;
 use App\Models\Poli;
 use App\Models\Obat;
+use App\Models\JadwalPeriksa;
+use App\Models\DaftarPoli;
+use App\Models\Periksa;
+
+
 use Carbon\Carbon;
 
 
@@ -141,21 +146,6 @@ class AuthController extends Controller
         }
 
         return back()->withErrors(['message' => 'Nama atau password salah']);
-
-        // $request->validate([
-        //     'nama' => 'required|string',
-        //     'alamat' => 'required|string',
-        // ]);
-
-        // $pasien = Pasien::authenticate($request->nama, $request->alamat);
-
-        // if ($pasien) {
-        //     // Simpan data dokter ke sesi
-        //     session(['pasien' => $pasien]);
-        //     return redirect()->route('pasien.dashboard')->with('success', 'Login berhasil');
-        // }
-
-        // return back()->withErrors(['message' => 'Nama atau alamat salah']);
     }
 
 
@@ -167,7 +157,19 @@ class AuthController extends Controller
             return redirect()->route('login.dokter')->withErrors(['message' => 'Harap login terlebih dahulu']);
         }
 
+        $totalJadwal = JadwalPeriksa::where('id_dokter', $dokter->id)
+        ->count(); // Menghitung jumlah jadwal yang ditetapkan oleh dokter
+
+        $totalPasien = Periksa::whereHas('daftarPoli.jadwal', function($query) use ($dokter) {
+            $query->where('id_dokter', $dokter->id); // Filter berdasarkan dokter dari jadwal
+        })
+        ->join('daftar_poli', 'periksa.id_daftar_poli', '=', 'daftar_poli.id') // Gabungkan dengan daftar_poli
+        ->join('jadwal_periksa', 'daftar_poli.id_jadwal', '=', 'jadwal_periksa.id') // Gabungkan dengan jadwal untuk mendapatkan id_dokter
+        ->distinct() // Menghitung pasien yang unik
+        ->count('daftar_poli.id_pasien'); // Menghitung berdasarkan kolom id_pasien di tabel daftar_poli
+
+
         // Tampilkan dashboard
-        return view('dokter.dashboard', ['dokter' => $dokter]);
+        return view('dokter.dashboard', compact('dokter', 'totalJadwal', 'totalPasien'));
     }
 }

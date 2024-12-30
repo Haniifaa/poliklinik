@@ -20,33 +20,6 @@ class PoliController extends Controller
         return view('admin.masterdata.poli', compact('poli', 'search'));
     }
 
-//     public function showPoliPasien()
-//     {
-// // Mengambil data pasien dari sesi
-// $pasien = session('pasien');
-
-// // Mengambil nama pasien dari data sesi
-// if ($pasien) {
-//     $namaPasien = $pasien->nama; // Ambil nama dari model Pasien yang ada di sesi
-// } else {
-//     // Jika tidak ada data pasien di sesi
-//     return redirect()->route('pasien.login')->withErrors(['message' => 'Harap login terlebih dahulu']);
-// }
-
-//         // Cek jika pasien ditemukan
-//         if ($pasien) {
-//             $no_rm = $pasien->no_rm; // Ambil no rekam medis pasien
-//         } else {
-//             return redirect()->back()->withErrors(['message' => 'Pasien tidak ditemukan']);
-//         }
-
-//         // Ambil data poli untuk dropdown
-//         $poli = Poli::all();
-
-//         // Kirim data pasien dan poli ke view
-//         return view('pasien.poli', compact('pasien', 'no_rm', 'poli'));
-//     }
-
     public function create()
     {
         return view('poli.create');
@@ -124,11 +97,5 @@ public function update(Request $request, $id)
         }
     }
 
-    // Menampilkan daftar jadwal periksa
-    // public function pasienpoli()
-    // {
-    //     $riwayat = DaftarPoli::with(['pasien', 'dokter', 'poli', 'jadwal', 'periksa'])->paginate(10);
 
-    //     return view('pasien.poli', compact('riwayat'));
-    // }
 }

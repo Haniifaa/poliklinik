@@ -122,42 +122,6 @@ $jadwals = JadwalPeriksa::where('id_dokter', $dokter->id)
         // Menambahkan log debugging untuk memastikan request diterima
         Log::debug('Update request diterima untuk jadwal dengan ID: ' . $jadwalPeriksa->id);
 
-        // // Jika status diubah menjadi Tidak Aktif
-        // if ($request->status == 'Tidak Aktif') {
-        //     Log::debug('Mengubah status jadwal dengan ID: ' . $jadwalPeriksa->id . ' menjadi Tidak Aktif.');
-
-        //     // Perbarui status menjadi Tidak Aktif
-        //     $jadwalPeriksa->update([
-        //         'status' => 'Tidak Aktif',
-        //     ]);
-
-        //     // Update juga field lain seperti hari, jam mulai, dan jam selesai
-        //     $jadwalPeriksa->update([
-        //         'hari' => $request->hari,
-        //         'jam_mulai' => $request->jam_mulai,
-        //         'jam_selesai' => $request->jam_selesai,
-        //     ]);
-        // }
-
-        // // Jika status diubah menjadi Aktif
-        // if ($request->status == 'Aktif') {
-        //     Log::debug('Mengubah status jadwal dengan ID: ' . $jadwalPeriksa->id . ' menjadi Aktif.');
-
-        //     // Cek apakah ada jadwal aktif lainnya untuk dokter ini
-        //     $existingActive = JadwalPeriksa::where('id_dokter', $jadwalPeriksa->id_dokter)
-        //         ->where('status', 'Aktif')
-        //         ->where('id', '!=', $jadwalPeriksa->id)  // Jangan cek diri sendiri
-        //         ->exists();
-
-        //     // Jika ada jadwal aktif lainnya, ubah statusnya menjadi Tidak Aktif
-        //     if ($existingActive) {
-        //         Log::debug('Jadwal aktif ditemukan, mengubah statusnya menjadi Tidak Aktif.');
-
-        //         // Ubah status jadwal yang aktif menjadi 'Tidak Aktif'
-        //         JadwalPeriksa::where('id_dokter', $jadwalPeriksa->id_dokter)
-        //             ->where('status', 'Aktif')
-        //             ->update(['status' => 'Tidak Aktif']);
-        //     }
 
             // Update status jadwal yang baru menjadi 'Aktif'
             $jadwalPeriksa->update([
