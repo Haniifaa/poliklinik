@@ -145,20 +145,7 @@ function addObatRow() {
         }
     });
 
-// Menambahkan event listener ke tombol "Tambah Obat"
-//document.getElementById("tambah-obat-btn").addEventListener("click", addObatRow);
 
-// Delegate event listener untuk elemen dinamis
-// document.getElementById("obat-list").addEventListener("click", function(e) {
-//     if (e.target.classList.contains("hapus-obat-btn")) {
-//         var id = e.target.getAttribute("data-id");
-//         var group = document.getElementById(`obat-group-${id}`);
-//         if (group) {
-//             group.remove();
-//             updateBiayaPeriksa();
-//         }
-//     }
-// });
 
 // Event listener untuk input jumlah obat atau pilihan obat
 document.getElementById("obat-list").addEventListener("input", function(e) {

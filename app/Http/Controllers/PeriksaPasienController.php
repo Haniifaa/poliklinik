@@ -141,23 +141,39 @@ class PeriksaPasienController extends Controller
 
 public function edit($id)
 {
+    $periksa = Periksa::with('obat', 'daftarPoli.pasien')->find($id);
 
-           // Ambil data Periksa dengan relasi yang dibutuhkan menggunakan get()
-    $periksa = Periksa::with('obat', 'daftarPoli.pasien')->where('id', $id)->get();
-
-    if ($periksa->isEmpty()) {
+    if (!$periksa) {
         \Log::warning('Periksa tidak ditemukan untuk ID: ' . $id);
-        return response()->json(['error' => 'Periksa tidak ditemukan'], 404);
+        return response()->json(['success' => false, 'message' => 'Periksa tidak ditemukan'], 404);
     }
 
-    // Log data periksa untuk debugging
-    \Log::info('Periksa ditemukan:', $periksa->toArray());
-    dd($periksa);
-
-    return response()->json($periksa);
+    $daftarObat = Obat::select('id', 'nama_obat', 'kemasan', 'harga')->get();
 
 
-    }
+    return response()->json([
+        'success' => true,
+        'data' => [
+            'id' => $periksa->id,
+            'tgl_periksa' => $periksa->tgl_periksa,
+            'catatan' => $periksa->catatan,
+            'biaya_periksa' => $periksa->biaya_periksa,
+            'id_daftar_poli' => $periksa->id_daftar_poli,
+            'nama' => $periksa->daftarPoli->pasien->nama,
+            'obat' => $periksa->obat->map(function ($obat) {
+                return [
+                    'id' => $obat->id, // Tambahkan ID obat untuk dropdown
+                    'nama_obat' => $obat->nama_obat,
+                    'kemasan' => $obat->kemasan,
+                    'harga' => $obat->harga,
+                ];
+            }),
+            'daftar_obat' => $daftarObat, // Tambahkan daftar obat ke respons
+        ]
+    ]);
+}
+
+
 
 
 

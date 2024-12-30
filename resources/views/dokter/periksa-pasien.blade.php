@@ -80,41 +80,31 @@
 </div>
 
 
-       <!-- Modal Edit Periksa Pasien -->
+<!-- Modal Edit Pasien -->
 <div id="editmodal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center hidden z-50">
-    <!-- Modal Container -->
-    <div class="bg-white rounded-lg shadow-lg w-full max-w-3xl p-6">
-        <!-- Modal Header -->
-        <div class="flex justify-between items-center border-b pb-3">
-            <h2 class="text-xl font-bold text-gray-900">Edit Periksa</h2>
-            <button type="button" class="text-gray-500 hover:text-red-500" onclick="closeModal('editmodal')">
-                &times;
-            </button>
-        </div>
-
-        <!-- Modal Body -->
-        <form id="editmodal" method="POST" action="">
+    <div class="bg-white rounded-lg shadow-lg w-full max-w-3xl p-5">
+        <h2 class="text-lg font-bold mb-3">Edit Pasien</h2>
+        <form id="editForm" method="POST" action="">
             @csrf
             @method('PUT')
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-3">
+                <!-- Nama -->
+                <div>
+                    <label for="nama" class="block text-sm font-medium text-gray-700">Nama</label>
+                    <input
+                        type="text"
+                        name="nama"
+                        id="nama"
+                        readonly
+                        required
+                        class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                    />
+                </div>
+                <!-- No. KTP -->
 
-            <!-- Nama Pasien -->
+                <input type="hidden" id="id_daftar_poli" name="id_daftar_poli" value="{{ $p->id_daftar_poli ?? '' }}">
 
-            <div class="mt-4">
-                <label for="nama" class="block text-sm font-medium text-gray-900">Nama Pasien</label>
-                <input
-                    type="text"
-                    id="nama"
-                    name="nama"
-                    value="{{ $periksa->daftarPoli->pasien->nama ?? 'Data pasien tidak ditemukan' }}"
-                    class="mt-2 block w-full rounded-md bg-gray-100 px-3 py-1.5 text-sm text-gray-900"
-                    readonly>
-            </div>
-
-
-            <!-- Input Hidden untuk ID Daftar Poli -->
-            <input type="hidden" id="id_daftar_poli" name="id_daftar_poli" value="{{ $p->id_daftar_poli ?? '' }}">
-
-            <!-- Tanggal Pemeriksaan dan Catatan -->
+                <!-- Tanggal Pemeriksaan dan Catatan -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
                 <div>
                     <label for="tgl_periksa" class="block text-sm font-medium text-gray-900">Tanggal Pemeriksaan</label>
@@ -125,6 +115,8 @@
                         value="{{ old('tgl_periksa', $p->tgl_periksa) }}"
                         class="mt-2 block w-full rounded-md bg-white px-3 py-1.5 text-sm text-gray-900 border border-gray-300">
                 </div>
+
+
                 <div>
                     <label for="catatan" class="block text-sm font-medium text-gray-900">Catatan Pemeriksaan</label>
                     <textarea
@@ -142,7 +134,7 @@
                 <button
                     type="button"
                     id="tambah-obat-btn"
-                    onclick="addObatRow()"
+                    onclick="tambahObat()"
                     class="mt-2 px-3 py-1 bg-purple-500 text-white text-sm rounded hover:bg-purple-600">
                     Tambah Obat
                 </button>
@@ -158,73 +150,145 @@
                     class="mt-2 block w-full rounded-md bg-white px-3 py-1.5 text-sm text-gray-900 border border-gray-300"
                     readonly>
             </div>
-
-            <!-- Buttons -->
-            <div class="flex justify-end mt-6 space-x-3">
+            </div>
+            <div class="flex justify-end space-x-3 mt-4">
                 <button
                     type="button"
                     onclick="closeModal('editmodal')"
-                    class="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600">
+                    class="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600"
+                >
                     Batal
                 </button>
                 <button
                     type="submit"
-                    class="px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600">
+                    class="px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600"
+                >
                     Simpan
                 </button>
             </div>
         </form>
     </div>
-</div>
-
 
 
 <script>
-function addObatRow(obatList = document.getElementById('obat-list'), obat = null, index = 0) {
+    let daftarObat = [];
+
+
+// Ambil data obat dari elemen tersembunyi saat halaman dimuat
+document.addEventListener('DOMContentLoaded', () => {
+    const dataObatElement = document.getElementById('data-obat');
+    if (dataObatElement) {
+        try {
+            daftarObat = JSON.parse(dataObatElement.textContent);
+        } catch (error) {
+            console.error('Error parsing data obat:', error.message);
+        }
+    }
+});
+function addObatRow(obatList = document.getElementById('obat-list'), obat = null, index = 0, daftarObat = []) {
     const row = document.createElement('div');
     row.classList.add('flex', 'items-center', 'space-x-4', 'mt-2');
 
-    // Input gabungan nama obat, kemasan, dan harga
-    const obatInput = document.createElement('input');
-    obatInput.type = 'text';
-    obatInput.name = `obat[${index}]`;
-    obatInput.placeholder = 'Nama Obat | Kemasan | Harga';
-    obatInput.value = obat ? `${obat.nama_obat} | ${obat.kemasan} | ${obat.harga}` : '';
-    obatInput.classList.add('w-full', 'px-3', 'py-1.5', 'border', 'rounded');
+    // Dropdown obat
+    const obatSelect = document.createElement('select');
+    obatSelect.name = `obat[${index}][id]`;
+    obatSelect.classList.add('w-full', 'px-3', 'py-1.5', 'border', 'rounded');
+
+    // Tambahkan opsi kosong
+    const emptyOption = document.createElement('option');
+    emptyOption.value = '';
+    emptyOption.textContent = '-- Pilih Obat --';
+    obatSelect.appendChild(emptyOption);
+
+    // Tambahkan daftar obat ke dropdown
+    if (daftarObat && daftarObat.length > 0) {
+        daftarObat.forEach(item => {
+            const option = document.createElement('option');
+            option.value = item.id;
+            option.textContent = `${item.nama_obat} | ${item.kemasan} | ${item.harga}`;
+            if (obat && obat.id === item.id) option.selected = true;
+            option.dataset.harga = item.harga; // Simpan harga di dataset
+            obatSelect.appendChild(option);
+        });
+    } else {
+        const noDataOption = document.createElement('option');
+        noDataOption.value = '';
+        noDataOption.textContent = 'Data obat tidak tersedia';
+        obatSelect.appendChild(noDataOption);
+    }
+
+    // Event listener untuk mengupdate biaya pemeriksaan
+    obatSelect.addEventListener('change', () => {
+        updateBiayaPeriksa();
+    });
 
     // Tombol hapus
     const deleteBtn = document.createElement('button');
     deleteBtn.type = 'button';
     deleteBtn.classList.add('px-3', 'py-1', 'bg-red-500', 'text-white', 'rounded');
     deleteBtn.textContent = 'Hapus';
-    deleteBtn.onclick = () => row.remove();
+    deleteBtn.onclick = () => {
+        row.remove();
+        updateBiayaPeriksa(); // Update biaya periksa setelah menghapus
+    };
 
     // Tambahkan elemen ke baris
-    row.appendChild(obatInput);
+    row.appendChild(obatSelect);
     row.appendChild(deleteBtn);
 
     // Tambahkan baris ke daftar obat
     obatList.appendChild(row);
 }
 
+
+function tambahObat() {
+    const obatList = document.getElementById('obat-list');
+    const daftarObat = getDaftarObat(); // Fungsi untuk mendapatkan daftar obat
+    const index = obatList.childElementCount; // Hitung jumlah baris saat ini
+    addObatRow(obatList, null, index, daftarObat);
+}
+
+
+
+
+function updateBiayaPeriksa() {
+    const obatDropdowns = document.querySelectorAll('#obat-list select');
+    let totalBiaya = 0;
+
+    // Hitung total biaya obat dari dropdown
+    obatDropdowns.forEach(select => {
+        const selectedOption = select.options[select.selectedIndex];
+        if (selectedOption && selectedOption.dataset.harga) {
+            totalBiaya += parseFloat(selectedOption.dataset.harga);
+        }
+    });
+
+    // Tambahkan biaya dokter sebesar 150,000
+    const biayaDokter = 150000;
+    totalBiaya += biayaDokter;
+
+    // Update input biaya pemeriksaan tanpa desimal
+    document.getElementById('biaya_periksa').value = Math.round(totalBiaya);
+}
+
+
 function editPeriksa(periksa) {
-    // Ambil data periksa berdasarkan ID
     console.log('ID Periksa yang dikirim ke server:', periksa);
 
     fetch(`/dokter/periksa-pasien/${periksa}/edit`)
-
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+        })
         .then(data => {
             if (data.success) {
                 const periksa = data.data;
 
                 // Mengisi formulir dengan data pasien dan periksa
-                document.getElementById('editmodal').action = `/dokter/periksa-pasien/${periksa}`;
-                if (data.daftarPoli && data.daftarPoli.pasien) {
-            document.getElementById('nama').value = data.daftarPoli.pasien.nama;
-        } else {
-            document.getElementById('nama').value = 'Data pasien tidak ditemukan';
-        }
+                document.getElementById('editForm').action = `/dokter/periksa-pasien/${periksa.id}`;
+                document.getElementById('nama').value = periksa.nama; // Isi nama pasien
                 document.getElementById('tgl_periksa').value = periksa.tgl_periksa;
                 document.getElementById('catatan').value = periksa.catatan;
                 document.getElementById('biaya_periksa').value = periksa.biaya_periksa;
@@ -234,34 +298,41 @@ function editPeriksa(periksa) {
                 const obatList = document.getElementById('obat-list');
                 obatList.innerHTML = ''; // Reset daftar obat
                 periksa.obat.forEach((obat, index) => {
-                    const obatData = {
-                        nama_obat: obat.nama_obat,
-                        kemasan: obat.kemasan,
-                        harga: obat.harga,
-                    };
-                    addObatRow(obatList, obatData, index);
+                    addObatRow(obatList, obat, index, periksa.daftar_obat); // Kirim daftar obat
                 });
 
                 // Menampilkan modal
                 openModal('editmodal');
             } else {
-                alert('Data periksa tidak ditemukan.');
+                alert(data.message || 'Data periksa tidak ditemukan.');
             }
         })
         .catch(error => {
-            console.error('Error:', error);
+            console.error('Error:', error.message);
             alert('Terjadi kesalahan saat mengambil data.');
         });
 }
 
 
 
+
+
 function openModal(modalId) {
-    document.getElementById(modalId).classList.remove('hidden');
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.classList.remove('hidden'); // Menampilkan modal
+    } else {
+        console.error(`Modal dengan ID "${modalId}" tidak ditemukan.`);
+    }
 }
 
 function closeModal(modalId) {
-    document.getElementById(modalId).classList.add('hidden');
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.classList.add('hidden'); // Menyembunyikan modal
+    } else {
+        console.error(`Modal dengan ID "${modalId}" tidak ditemukan.`);
+    }
 }
 
 
