@@ -37,10 +37,10 @@ class Obat extends Model
         return self::count();
     }
 
-    public function detailPeriksa()
-    {
-        return $this->belongsToMany(Periksa::class, 'detail_periksa');  // Hapus withPivot('jumlah')
-    }
+    // public function detailPeriksa()
+    // {
+    //     return $this->belongsToMany(Periksa::class, 'detail_periksa');  // Hapus withPivot('jumlah')
+    // }
 
 // App\Models\Obat.php
 

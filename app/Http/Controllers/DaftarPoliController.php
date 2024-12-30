@@ -38,7 +38,7 @@ class DaftarPoliController extends Controller
                 } else {
                     return redirect()->back()->withErrors(['message' => 'Pasien tidak ditemukan']);
                 }
-                $riwayat = DaftarPoli::with(['pasien', 'dokter.poli', 'jadwal', 'periksa', 'periksa.detailPeriksa'])
+                $riwayat = DaftarPoli::with(['pasien', 'dokter.poli', 'jadwal', 'periksa', 'periksa.detailPeriksa.obat'])
                 ->whereHas('pasien', function ($query) use ($no_rm) {
                     $query->where('no_rm', $no_rm); // Filter berdasarkan no_rm pasien
                 })

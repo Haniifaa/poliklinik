@@ -118,18 +118,27 @@
         console.log("Data Riwayat yang Ditemukan:", riwayat); // Log data yang ditemukan
         const modalBody = document.getElementById('modal-detail-body');
 
+        const nomorUrut = 1; // Atau bisa dihitung sesuai urutan
+
         // Menggunakan optional chaining (?.) untuk menghindari error jika data tidak ada
         modalBody.innerHTML = `
             <tr>
-                <td class="px-6 py-4">${id}</td>
+                    <td class="px-6 py-4">${nomorUrut}</td> <!-- Menampilkan nomor urut -->
                 <td class="px-6 py-4">${riwayat.tgl_periksa || 'Tanggal tidak tersedia'}</td>
-                <td class="px-6 py-4">${riwayat.daftarPoli?.pasien?.nama || 'Nama Pasien Tidak Ditemukan'}</td>
-                <td class="px-6 py-4">${riwayat.daftarPoli?.dokter?.nama || 'Tidak ada dokter'}</td>
-                <td class="px-6 py-4">${riwayat.daftarPoli?.keluhan || 'Tidak ada keluhan'}</td>
+                <td class="px-6 py-4">${riwayat.daftar_poli?.pasien?.nama || 'Nama Pasien Tidak Ditemukan'}</td>
+                <td class="px-6 py-4">${riwayat.daftar_poli?.dokter?.nama || 'Tidak ada dokter'}</td>
+                <td class="px-6 py-4">${riwayat.daftar_poli?.keluhan || 'Tidak ada keluhan'}</td>
                 <td class="px-6 py-4">${riwayat.catatan || 'Tidak ada catatan'}</td>
                 <td class="px-6 py-4">
-                    ${riwayat.detailPeriksa?.length ? riwayat.detailPeriksa.map(d => d.obat?.nama_obat).join('<br>') : 'Tidak ada obat'}
-                </td>
+    ${riwayat.detail_periksa?.length ?
+        riwayat.detail_periksa.map(d => {
+            const obat = d.obat;
+            return obat ?
+                `${obat.nama_obat} - ${obat.kemasan}` :
+                'Nama Obat Tidak Tersedia';
+        }).join('<br>') :
+        'Tidak ada obat'}
+</td>
                 <td class="px-6 py-4">Rp ${riwayat.biaya_periksa?.toLocaleString() || '0'}</td>
             </tr>
         `;

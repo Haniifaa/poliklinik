@@ -54,7 +54,7 @@
                             <th scope="col" class="px-6 py-3">Jam Mulai</th>
                             <th scope="col" class="px-6 py-3">Jam Selesai</th>
                             <th scope="col" class="px-6 py-3">Status</th>
-                            {{-- <th scope="col" class="px-6 py-3">Action</th> --}}
+                            <th scope="col" class="px-6 py-3">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -70,7 +70,7 @@
                             <td class="px-6 py-4 flex items-center">
                                 <div class="flex items-center me-2">
                                     <div id="status-indicator-{{ $jadwal->id }}" data-id="{{ $jadwal->id }}"
-                                         class="h-2.5 w-2.5 rounded-full {{ $jadwal->status == 'Aktif' ? 'bg-green-500' : 'bg-red-500' }} me-2">
+                                        class="h-2.5 w-2.5 rounded-full {{ $jadwal->status == 'Aktif' ? 'bg-green-500' : 'bg-red-500' }} me-2">
                                     </div>
                                 </div>
                                 <select onchange="updateStatus({{ $jadwal->id }}, this.value)"
@@ -79,16 +79,20 @@
                                     <option value="Tidak Aktif" {{ $jadwal->status == 'Tidak Aktif' ? 'selected' : '' }}>Tidak Aktif</option>
                                 </select>
                             </td>
-
-
-
+                            <!-- Kolom Action -->
+                            <td class="px-6 py-4">
+                                <form action="{{ route('dokter.jadwal-periksa.destroy', $jadwal->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus data?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="font-medium text-red-600 hover:underline">Hapus</button>
+                                </form>
+                            </td>
                         </tr>
-
                         @endforeach
-
                     </tbody>
                 </table>
             </div>
+
 
 
             <!-- Modal Tambah Jadwal Periksa -->

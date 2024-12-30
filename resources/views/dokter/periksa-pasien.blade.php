@@ -185,21 +185,31 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 });
-function addObatRow(obatList = document.getElementById('obat-list'), obat = null, index = 0, daftarObat = []) {
+function addObatRow(obatList, obat = null, index = 0) {
     const row = document.createElement('div');
     row.classList.add('flex', 'items-center', 'space-x-4', 'mt-2');
 
-    // Dropdown obat
     const obatSelect = document.createElement('select');
     obatSelect.name = `obat[${index}][id]`;
     obatSelect.classList.add('w-full', 'px-3', 'py-1.5', 'border', 'rounded');
 
-    // Tambahkan opsi kosong
+    // Tambah opsi default
     const emptyOption = document.createElement('option');
     emptyOption.value = '';
     emptyOption.textContent = '-- Pilih Obat --';
     obatSelect.appendChild(emptyOption);
 
+    // Gunakan daftarObat global
+    // daftarObat.forEach(item => {
+    //     const option = document.createElement('option');
+    //     option.value = item.id;
+    //     option.textContent = `${item.nama_obat} | ${item.kemasan} | ${item.harga}`;
+    //     option.dataset.harga = item.harga;
+    //     if (obat && obat.id === item.id) {
+    //         option.selected = true;
+    //     }
+    //     obatSelect.appendChild(option);
+    // });
     // Tambahkan daftar obat ke dropdown
     if (daftarObat && daftarObat.length > 0) {
         daftarObat.forEach(item => {
@@ -240,12 +250,17 @@ function addObatRow(obatList = document.getElementById('obat-list'), obat = null
     obatList.appendChild(row);
 }
 
+function getDaftarObat() {
+    return daftarObat; // Mengembalikan variabel `daftarObat` yang sudah diinisialisasi sebelumnya
+}
+
+
 
 function tambahObat() {
     const obatList = document.getElementById('obat-list');
-    const daftarObat = getDaftarObat(); // Fungsi untuk mendapatkan daftar obat
+    // const daftarObat = getDaftarObat(); // Fungsi untuk mendapatkan daftar obat
     const index = obatList.childElementCount; // Hitung jumlah baris saat ini
-    addObatRow(obatList, null, index, daftarObat);
+    addObatRow(obatList, null, index);
 }
 
 
@@ -286,6 +301,9 @@ function editPeriksa(periksa) {
             if (data.success) {
                 const periksa = data.data;
 
+                daftarObat = periksa.daftar_obat;
+
+
                 // Mengisi formulir dengan data pasien dan periksa
                 document.getElementById('editForm').action = `/dokter/periksa-pasien/${periksa.id}`;
                 document.getElementById('nama').value = periksa.nama; // Isi nama pasien
@@ -298,7 +316,7 @@ function editPeriksa(periksa) {
                 const obatList = document.getElementById('obat-list');
                 obatList.innerHTML = ''; // Reset daftar obat
                 periksa.obat.forEach((obat, index) => {
-                    addObatRow(obatList, obat, index, periksa.daftar_obat); // Kirim daftar obat
+                    addObatRow(obatList, obat, index); // Kirim daftar obat
                 });
 
                 // Menampilkan modal
@@ -335,250 +353,6 @@ function closeModal(modalId) {
     }
 }
 
-
-
-    // // Fungsi untuk membuka modal
-    // function openModal(modalId) {
-    //     const modal = document.getElementById(modalId);
-    //     if (modal) {
-    //         modal.classList.remove('hidden');
-    //     }
-    // }
-
-    // // Fungsi untuk menutup modal
-    // function closeModal(modalId) {
-    //     const modal = document.getElementById(modalId);
-    //     if (modal) {
-    //         modal.classList.add('hidden');
-    //     }
-    // }
-
-    // // Fungsi untuk membersihkan modal
-    // function clearModal() {
-    //     document.getElementById('editForm').reset();
-    //     document.getElementById('obat-list').innerHTML = '';
-    //     document.getElementById('biaya_periksa').value = 0;
-    // }
-
-    // // Fungsi untuk menambahkan baris obat
-    // function addObatRow() {
-    //     const container = document.getElementById('obat-list');
-    //     const index = container.children.length; // Gunakan panjang children untuk menentukan index
-    //     const row = document.createElement('div');
-    //     row.classList.add('flex', 'gap-4', 'mb-2');
-    //     row.id = `obat-row-${index}`;
-
-    //     row.innerHTML = `
-    //         <select
-    //             name="obat[${index}][id]"
-    //             class="obat-select block w-full rounded-md bg-white px-3 py-1.5 text-sm text-gray-900 border border-gray-300"
-    //             onchange="updateBiayaPeriksa()">
-    //             <option value="" disabled selected>Pilih Obat</option>
-    //             ${obatList.map(obat => `
-    //                 <option value="${obat.id}" data-harga="${obat.harga}">
-    //                     ${obat.nama} - Rp${obat.harga.toLocaleString('id-ID')}
-    //                 </option>
-    //             `).join('')}
-    //         </select>
-    //         <input
-    //             type="number"
-    //             name="obat[${index}][jumlah]"
-    //             class="jumlah-obat-input block w-20 rounded-md bg-white px-3 py-1.5 text-sm text-gray-900 border border-gray-300"
-    //             min="1"
-    //             value="1"
-    //             oninput="updateBiayaPeriksa()">
-    //         <button
-    //             type="button"
-    //             class="hapus-obat-btn text-red-500 hover:underline"
-    //             onclick="removeObatRow(${index})">
-    //             Hapus
-    //         </button>
-    //     `;
-
-    //     container.appendChild(row);
-    // }
-
-    // // Fungsi untuk menghapus baris obat
-    // function removeObatRow(index) {
-    //     const row = document.getElementById(`obat-row-${index}`);
-    //     if (row) {
-    //         row.remove();
-    //         updateBiayaPeriksa();
-    //     }
-    // }
-
-    // // Fungsi untuk menghapus baris obat dan menghitung ulang biaya
-    // function attachEventListeners() {
-    //     document.querySelectorAll('.remove-obat').forEach(button => {
-    //         button.addEventListener('click', function () {
-    //             this.parentElement.remove();
-    //             updateBiayaPeriksa();
-    //         });
-    //     });
-
-    //     document.querySelectorAll('.obat-select, .obat-jumlah').forEach(element => {
-    //         element.addEventListener('change', updateBiayaPeriksa);
-    //     });
-    // }
-
-
-
-    // Fungsi untuk mengedit data periksa
-//     function editperiksa(periksa) {
-//     // Bersihkan modal sebelum diisi ulang
-//     clearModal();
-
-//     // Fetch data dari endpoint
-//     fetch(`/dokter/periksa-pasien/${periksa}/edit`)
-//         .then(response => {
-//             if (!response.ok) {
-//                 throw new Error('Data tidak ditemukan');
-//             }
-//             return response.json();
-//         })
-//         .then(data => {
-//             // Isi data ke dalam form modal
-//             const form = document.getElementById('editForm');
-//             if (form) form.action = `/dokter/periksa-pasien/${periksa}`; // Update action form
-
-//             // Tampilkan nama pasien (tidak bisa diedit)
-//             const namaInput = document.getElementById('nama');
-// if (namaInput) namaInput.value = data.pasien?.nama || 'Nama tidak ditemukan';
-
-//             const tgl_periksa = document.getElementById('tgl_periksa');
-//             if (tgl_periksa) tgl_periksa.value = data.tgl_periksa?.replace(' ', 'T') || '';
-
-//             const catatan = document.getElementById('catatan');
-//             if (catatan) catatan.value = data.catatan || '';
-
-//             const biaya_periksa = document.getElementById('biaya_periksa');
-//             if (biaya_periksa) biaya_periksa.value = data.biaya_periksa || 0;
-
-//             // Bersihkan container obat
-//             const container = document.getElementById('obat-container');
-//             if (container) {
-//                 container.innerHTML = '';
-
-//                 // Tambahkan obat ke dalam modal
-//                 data.obat?.forEach((item, index) => {
-//                     const newRow = document.createElement('div');
-//                     newRow.classList.add('flex', 'gap-4', 'mb-2');
-//                     newRow.id = `obat-group-${index}`;
-
-//                     newRow.innerHTML = `
-//                         <select
-//                             name="obat[${index}][id]"
-//                             class="obat-select block w-full rounded-md bg-white px-3 py-1.5 text-sm text-gray-900 border border-gray-300">
-//                             <option value="" disabled>Pilih Obat</option>
-//                             ${data.obatList.map(obat => `
-//                                 <option value="${obat.id}" ${item.id === obat.id ? 'selected' : ''}>
-//                                     ${obat.nama} - Rp${obat.harga.toLocaleString('id-ID')}
-//                                 </option>
-//                             `).join('')}
-//                         </select>
-//                         <input
-//                             type="number"
-//                             name="obat[${index}][jumlah]"
-//                             class="obat-jumlah block w-20 rounded-md bg-white px-3 py-1.5 text-sm text-gray-900 border border-gray-300"
-//                             min="1"
-//                             value="${item.jumlah}">
-//                         <button
-//                             type="button"
-//                             class="hapus-obat-btn text-red-500 hover:underline"
-//                             data-id="${index}">
-//                             Hapus
-//                         </button>
-//                     `;
-//                     container.appendChild(newRow);
-//                 });
-//             }
-
-//             // Buka modal setelah semua data terisi
-//             openModal('editmodal');
-//         })
-//         .catch(error => {
-//             console.error('Error fetching periksa data:', error);
-//         });
-// }
-
-// Fungsi untuk memasang event listener pada elemen dinamis
-// function attachDynamicListeners() {
-//     // Event listener untuk tombol hapus
-//     document.getElementById("obat-container").addEventListener("click", function(e) {
-//         if (e.target.classList.contains("hapus-obat-btn")) {
-//             var id = e.target.getAttribute("data-id");
-//             var group = document.getElementById(`obat-group-${id}`);
-//             if (group) {
-//                 group.remove();
-//                 updateBiayaPeriksa();
-//             }
-//         }
-//     });
-
-//     // Event listener untuk perubahan input jumlah atau pilihan obat
-//     document.getElementById("obat-container").addEventListener("input", function(e) {
-//         if (e.target.classList.contains("jumlah-obat-input") || e.target.classList.contains("obat-select")) {
-//             updateBiayaPeriksa();
-//         }
-//     });
-// }
-
-// // Fungsi untuk memperbarui biaya pemeriksaan
-// // Fungsi untuk memperbarui biaya pemeriksaan
-// function updateBiayaPeriksa() {
-//         const biayaDokter = 150000; // Biaya tetap dokter
-//         let totalBiayaObat = 0;
-
-//         document.querySelectorAll('#obat-list .obat-select').forEach((select, index) => {
-//             const selectedOption = select.options[select.selectedIndex];
-//             const harga = parseFloat(selectedOption.getAttribute('data-harga')) || 0;
-//             const jumlah = parseInt(document.querySelectorAll('#obat-list .jumlah-obat-input')[index].value) || 0;
-
-//             totalBiayaObat += harga * jumlah;
-//         });
-
-//         // Total biaya pemeriksaan
-//         const totalBiaya = biayaDokter + totalBiayaObat;
-//         document.getElementById('biaya_periksa').value = totalBiaya;
-//     }
-
-//     // Inisialisasi event listener
-//     attachEventListeners();
-
-//     // Fungsi untuk memuat data periksa
-//     function editPeriksa(periksa) {
-//         clearModal();
-
-//         fetch(`/dokter/periksa-pasien/${periksa}/edit`)
-//             .then(response => {
-//                 if (!response.ok) throw new Error('Data tidak ditemukan');
-//                 return response.json();
-//             })
-//             .then(data => {
-//                 document.getElementById('editForm').action = `/dokter/periksa-pasien/${periksa}`;
-//                 document.getElementById('nama').value = data.pasien?.nama || 'Nama tidak ditemukan';
-//                 document.getElementById('tgl_periksa').value = data.tgl_periksa?.replace(' ', 'T') || '';
-//                 document.getElementById('catatan').value = data.catatan || '';
-//                 document.getElementById('biaya_periksa').value = data.biaya_periksa || 0;
-
-//                 const container = document.getElementById('obat-list');
-//                 container.innerHTML = ''; // Bersihkan daftar obat
-
-//                 data.obat?.forEach((item, index) => {
-//                     addObatRow(); // Tambahkan baris obat baru
-//                     const newRow = container.lastElementChild;
-
-//                     const select = newRow.querySelector('.obat-select');
-//                     const inputJumlah = newRow.querySelector('.jumlah-obat-input');
-
-//                     select.value = item.id;
-//                     inputJumlah.value = item.jumlah;
-//                 });
-
-//                 openModal('editmodal');
-//             })
-//             .catch(error => console.error('Error fetching periksa data:', error));
-//     }
 </script>
 
 </x-layout-dokter>

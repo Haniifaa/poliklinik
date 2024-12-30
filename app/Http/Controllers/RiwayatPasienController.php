@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\RiwayatPasien;
+use App\Models\DaftarPoli;
 use App\Models\Pasien;
 use App\Models\Periksa;
 use App\Models\JadwalPeriksa;
@@ -20,7 +21,8 @@ class RiwayatPasienController extends Controller
         $riwayat = Periksa::with([
             'daftarPoli.pasien',
             'daftarPoli.jadwal.dokter',
-            'daftarPoli.dokter', 'detailPeriksa.obat',
+            'daftarPoli.dokter',
+            'detailPeriksa.obat',
             'detailPeriksa:id_periksa,id_obat,created_at,updated_at' // Pastikan hanya kolom yang ada di detail_periksa yang di-load
         ]) // Eager load jadwal dan dokter
         ->whereHas('daftarPoli.jadwal.dokter', function ($query) use ($dokter) {
@@ -29,4 +31,5 @@ class RiwayatPasienController extends Controller
         ->get();
 
         return view('dokter.riwayat-pasien', compact('riwayat'));
-    }}
+    }
+}

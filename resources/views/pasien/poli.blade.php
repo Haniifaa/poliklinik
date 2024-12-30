@@ -101,9 +101,9 @@
                                 {{ $r->periksa ? 'Sudah Diperiksa' : 'Belum Diperiksa' }}
                             </span>
                         </td>
-                                                                        <td class="flex items-center px-6 py-4">
-                                                    <button id="openModal" class="font-medium text-blue-600 hover:underline bg-transparent border-none cursor-pointer">Detail Riwayat</button>
-                                                </td>
+                        <td class="flex items-center px-6 py-4">
+                            <button id="openModal" class="font-medium text-blue-600 hover:underline bg-transparent border-none cursor-pointer">Detail Poli dan Riwayat</button>
+                        </td>
                     </tr>
                     @empty
                     <tr>
@@ -162,25 +162,46 @@
                         <td class="px-6 py-4">{{ $r->jadwal?->hari ?? 'Tidak ada data' }}</td>
                         <td class="px-6 py-4">{{ $r->jadwal?->jam_mulai ?? 'Tidak ada data' }}</td>
                         <td class="px-6 py-4">{{ $r->jadwal?->jam_selesai ?? 'Tidak ada data'}}</td>
-                        <td class="px-6 py-4">{{ $r->no_antrian ?? 'Tidak ada data'}}</td>
-            </tr>
+                        <td class="px-6 py-4">
+                            <span class="bg-green-400 text-white py-1 px-3 rounded-full text-sm">
+                                {{ $r->no_antrian ?? 'Tidak ada data'}}
+                            </span>
+                        </td>
+                                    </tr>
 
           </tbody>
         </table>
 
         <!-- Additional Details -->
         <div class="mt-6">
-          <p><strong>Tanggal Periksa:</strong>{{ $r->periksa?->tgl_periksa}}</p>
-          <p><strong>Catatan:</strong> {{ $r->periksa?->catatan}}</p>
-          {{-- <p><strong>Daftar Obat yang Diresepkan:</strong> {{ $r->detailPeriksa?->obat?->nama_obat}}</p> --}}
-          <p class="mt-4"> <!-- Menambahkan margin-top untuk memberi jarak -->
-            <strong class="text-xl font-semibold">Biaya Periksa:</strong> <!-- Memperbesar teks "Biaya Periksa" -->
-            <span class="bg-purple-600 text-white px-4 py-2 rounded-full text-xl font-semibold">
-                {{ 'Rp ' . number_format($r->periksa?->biaya_periksa, 0, ',', '.') }}
-            </span>
-        </p>
+            <p><strong>Tanggal Periksa:</strong> {{ $r->periksa?->tgl_periksa ?? 'Belum ada tanggal periksa' }}</p>
+            <p><strong>Catatan:</strong> {{ $r->periksa?->catatan ?? 'Tidak ada catatan' }}</p>
 
-                </div>
+            <p><strong>Daftar Obat yang Diresepkan:</strong></p>
+            {{-- <pre>{{ var_dump($r->periksa?->detailPeriksa?->toArray()) }}</pre> --}}
+
+    @if ($r->periksa?->detailPeriksa)
+
+        <ul>
+            @foreach ($r->periksa->detailPeriksa as $detail)
+            <li>
+                {{ $detail->obat?->nama_obat ?? 'Nama obat tidak ditemukan' }} -
+                {{ $detail->obat?->kemasan ?? 'Kemasan tidak ditemukan' }}
+            </li>
+        @endforeach
+        </ul>
+    @else
+        <p>Tidak ada obat yang diresepkan</p>
+    @endif
+
+            <p class="mt-4">
+                <strong class="text-xl font-semibold">Biaya Periksa:</strong>
+                <span class="bg-purple-600 text-white px-4 py-2 rounded-full text-xl font-semibold">
+                    {{ $r->periksa?->biaya_periksa ? 'Rp ' . number_format($r->periksa->biaya_periksa, 0, ',', '.') : 'Belum diperiksa' }}
+                </span>
+            </p>
+        </div>
+
       </div>
       @endforeach
 

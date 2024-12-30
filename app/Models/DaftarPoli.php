@@ -34,7 +34,11 @@ class DaftarPoli extends Model
 
     public function periksa()
     {
-        return $this->hasMany(Periksa::class, 'id_daftar_poli');
+        return $this->hasOne(Periksa::class, 'id_daftar_poli', 'id');
+    }
+    public function detailPeriksa()
+    {
+        return $this->hasMany(DetailPeriksa::class, 'id_periksa', 'id');
     }
 
 
