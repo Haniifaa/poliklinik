@@ -17,7 +17,7 @@ Sebelum memulai, pastikan Anda memiliki hal-hal berikut yang terpasang di mesin 
 
 ### Langkah 1: Clone Repository
 
-Jika Anda memiliki repository untuk proyek ini, clone terlebih dahulu menggunakan perintah berikut:
+Clone terlebih dahulu menggunakan perintah berikut:
 
 ```bash
 git clone https://github.com/Haniifaa/poliklinik.git
@@ -67,3 +67,7 @@ http://127.0.0.1:8000/admin/login
 ```
 Nama/username: admin@example.com  
 Password: password123
+
+## Cara Login sebagai Pasien
+Password: alamat pasien yang di daftarkan
+
