@@ -33,7 +33,18 @@
                         <img class="w-8 h-8 rounded-full" src="https://flowbite.com/docs/images/people/profile-picture-5.jpg" alt="user photo">
                     </button>
                 </div>
+                <div class="ms-4">
+                    <form action="{{ route('pasien.logout') }}" method="POST" class="inline">
+                        @csrf
+                        <button type="submit" class="text-sm font-medium text-red-600 hover:text-red-800 focus:outline-none focus:ring-2 focus:ring-red-300">
+                            Logout
+                        </button>
+                    </form>
+
+
             </div>
+            </div>
+
         </div>
     </div>
 </nav>

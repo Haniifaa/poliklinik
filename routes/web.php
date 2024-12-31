@@ -97,4 +97,6 @@ Route::post('/pasien/daftar-poli', [DaftarPoliController::class, 'store'])->name
 Route::get('/pasien/dashboard', [PasienController::class, 'dashboard'])->name('pasien.dashboard');
 Route::get('/pasien/poli', [DaftarPoliController::class, 'showPoliPasien'])->name('pasien.poli');
 
+Route::post('/logout/dokter', [AuthController::class, 'logoutdokter'])->name('dokter.logout');
+Route::post('/logout/pasien', [AuthController::class, 'logoutpasien'])->name('pasien.logout');
 

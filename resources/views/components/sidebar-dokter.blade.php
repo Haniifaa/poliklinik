@@ -30,6 +30,15 @@
                 alt="user photo">
         </a>
                 </div>
+                <div class="ms-4">
+                    <form action="{{ route('dokter.logout') }}" method="POST" class="inline">
+                        @csrf
+                        <button type="submit" class="text-sm font-medium text-red-600 hover:text-red-800 focus:outline-none focus:ring-2 focus:ring-red-300">
+                            Logout
+                        </button>
+                    </form>
+
+
             </div>
         </div>
     </div>

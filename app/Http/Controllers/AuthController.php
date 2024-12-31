@@ -147,6 +147,24 @@ class AuthController extends Controller
 
         return back()->withErrors(['message' => 'Nama atau password salah']);
     }
+    public function logoutdokter(Request $request)
+{
+    // Hapus sesi dokter
+    $request->session()->forget('dokter');
+
+    // Redirect ke halaman login dokter
+    return redirect()->route('login.dokter')->with('success', 'Logout berhasil.');
+}
+
+public function logoutpasien(Request $request)
+{
+    // Hapus sesi pasien
+    $request->session()->forget('pasien');
+
+    // Redirect ke halaman login pasien
+    return redirect()->route('login.pasien')->with('success', 'Logout berhasil.');
+}
+
 
 
     public function dashboard()
