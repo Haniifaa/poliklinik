@@ -8,7 +8,7 @@ Web Sistem Temu Janji Poliklinik adalah aplikasi berbasis web yang dibangun meng
 
 Sebelum memulai, pastikan Anda memiliki hal-hal berikut yang terpasang di mesin lokal Anda:
 
-1. **PHP 8.1 atau lebih tinggi**  
+1. **PHP 8.2 atau lebih tinggi**  
 2. **Composer** – Dependency Manager untuk PHP  
 3. **Node.js** – Untuk Tailwind CSS dan dependensi front-end lainnya  
 4. **NPM** – Node package manager
